@@ -502,5 +502,11 @@ var GaiaDataLayer = {
          window.wrappedJSObject.AlarmManager.delete(aAlarm);
       });
     });
+  },
+
+  cardState: function() {
+    var conn = window.navigator.mozMobileConnection;
+    return conn.cardState;
   }
+
 };
