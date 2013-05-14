@@ -35,6 +35,7 @@ class CallScreen(Phone):
 
     def wait_for_outgoing_call(self):
         self.wait_for_element_displayed(*self._outgoing_call_locator)
+        self.wait_for_element_displayed(*self._calling_contact_locator)
 
     def tap_hang_up(self):
         hang_up = self.marionette.find_element(*self._hangup_bar_locator)

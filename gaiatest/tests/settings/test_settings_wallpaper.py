@@ -15,7 +15,7 @@ class TestWallpaper(GaiaTestCase):
     _wallpaper_preview_locator = ('id', 'wallpaper-preview')
     _wallpaper_button_locator = ('css selector', "a[data-value='0']")
     _wallpaper_title_locator = ('css selector', "h1[data-l10n-id='select-wallpaper']")
-    _pick_wallpapers_locator = ('css selector', "div[class='wallpaper']")
+    _stock_wallpapers_locator = ('css selector', "div[class='wallpaper']")
     _wallpaper_frame_locator = ('css selector', "iframe[src^='app://wallpaper'][src$='pick.html']")
     _settings_frame_locator = ('css selector', "iframe[src^='app://settings'][src$='index.html#root']")
 
@@ -63,10 +63,10 @@ class TestWallpaper(GaiaTestCase):
         self.marionette.switch_to_frame(self.marionette.find_element(*self._wallpaper_frame_locator))
 
         # pick a wallpaper
-        self.wait_for_condition(lambda m: m.find_element(*self._wallpaper_title_locator).text != "")
-        pick_wallpapers = self.marionette.find_elements(*self._pick_wallpapers_locator)
-        self.wait_for_element_displayed(*self._pick_wallpapers_locator)
-        self.marionette.tap(pick_wallpapers[3])
+        self.wait_for_element_displayed(*self._stock_wallpapers_locator)
+        stock_wallpapers = self.marionette.find_elements(*self._stock_wallpapers_locator)
+        self.assertGreater(len(stock_wallpapers), 0, 'no stock wallpapers found')
+        self.marionette.tap(stock_wallpapers[3])
 
         # switch to the system app
         self.marionette.switch_to_frame()

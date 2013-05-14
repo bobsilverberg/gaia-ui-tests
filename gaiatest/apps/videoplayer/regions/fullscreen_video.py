@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest.apps.base import Base
+from marionette.errors import ElementNotVisibleException
 
 
 class FullscreenVideo(Base):
@@ -18,7 +19,12 @@ class FullscreenVideo(Base):
 
     def tap_control_bar(self):
         self.wait_for_element_displayed(*self._video_controls_locator)
-        self.marionette.tap(self.marionette.find_element(*self._video_controls_locator))
+        video_controls_locator = self.marionette.find_element(*self._video_controls_locator)
+        try:
+            self.marionette.tap(video_controls_locator)
+        except ElementNotVisibleException:
+            self.marionette.find_element(*self._video_player_locator).tap()
+
         self.wait_for_element_displayed(*self._elapsed_text_locator)
 
     @property
