@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import unittest
 from gaiatest import GaiaTestCase
 
 
@@ -20,6 +21,7 @@ class TestCalculator(GaiaTestCase):
         # launch the Calculator app
         self.app = self.apps.launch('Calculator')
 
+    @unittest.skip('Bug 822565 - Not for 1.0 release')
     def test_calculator_basic(self):
         # https://moztrap.mozilla.org/manage/case/2844/
 
