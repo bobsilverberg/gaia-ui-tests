@@ -1,3 +1,4 @@
+import unittest
 from gaiatest import GaiaTestCase
 
 MANIFEST = 'http://mozqa.com/data/webapps/mozqa.com/manifest.webapp'
@@ -33,6 +34,7 @@ class TestLaunchApp(GaiaTestCase):
         # We'll find the icon in the test instead
         self.wait_for_element_present(*self._icon_locator)
 
+    @unittest.expectedFailure  # This one should pass, and that should be flagged as a failure
     def test_launch_app(self):
         # click icon and wait for h1 element displayed
         icon = self.marionette.find_element(*self._icon_locator)
