@@ -19,6 +19,17 @@
       "name": "",
       "email": "",
       "password": ""
+    },
+    "IMAP": {
+      "name": "",
+      "email": "",
+      "password": "",
+      "imap_hostname": "",
+      "imap_name": "",
+      "imap_port": "",
+      "smtp_hostname": "",
+      "smtp_name": "",
+      "smtp_port": ""
     }
   }
 }

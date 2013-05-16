@@ -434,7 +434,8 @@ class GaiaTestCase(MarionetteTestCase):
         # remove media
         if self.device.is_android_build and self.data_layer.media_files:
             for filename in self.data_layer.media_files:
-                self.device.manager.removeFile('/'.join(['sdcard', filename]))
+                # filename is a fully qualified path
+                self.device.manager.removeFile(filename)
 
         if self.data_layer.get_setting('ril.radio.disabled'):
             # enable the device radio, disable Airplane mode

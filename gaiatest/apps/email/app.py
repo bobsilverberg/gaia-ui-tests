@@ -5,6 +5,7 @@
 from gaiatest.apps.base import Base
 from gaiatest.apps.base import PageRegion
 from gaiatest.apps.email.regions.setup import SetupEmail
+from gaiatest.apps.email.regions.setup import ManualSetupEmail
 from gaiatest.apps.email.regions.settings import Settings
 
 
@@ -15,6 +16,8 @@ class Email(Base):
     _header_area_locator = ('css selector', '.msg-list-header.msg-nonsearch-only')
     _email_locator = ('css selector', '.msg-header-item')
     _syncing_locator = ('css selector', '.msg-messages-syncing > .small')
+    _manual_setup_locator = ('css selector', '.sup-manual-config-btn')
+
 
     def basic_setup_email(self, name, email, password):
 
@@ -38,6 +41,11 @@ class Email(Base):
         delete_confirmation = account_settings.tap_delete()
         delete_confirmation.tap_delete()
 
+    def tap_manual_setup(self):
+        self.wait_for_element_displayed(*self._manual_setup_locator)
+        self.marionette.tap(self.marionette.find_element(*self._manual_setup_locator))
+        return ManualSetupEmail(self.marionette)
+
     @property
     def header(self):
         return Header(self.marionette)
@@ -53,6 +61,8 @@ class Email(Base):
     def wait_for_emails_to_sync(self):
         self.wait_for_element_not_displayed(*self._syncing_locator)
 
+    def wait_for_header_area(self):
+        self.wait_for_element_displayed(*self._header_area_locator)
 
 class Header(Base):
     _menu_button_locator = ('css selector', '.msg-folder-list-btn')
