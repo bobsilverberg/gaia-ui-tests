@@ -4,6 +4,7 @@
 
 from gaiatest import GaiaTestCase
 from gaiatest.apps.marketplace.app import Marketplace
+from gaiatest.mocks.persona_test_user import PersonaTestUser
 
 
 class TestMarketplaceLogin(GaiaTestCase):
@@ -23,6 +24,9 @@ class TestMarketplaceLogin(GaiaTestCase):
         self.connect_to_network()
         self.install_marketplace()
 
+        self.user = PersonaTestUser().create_user(verified=True,
+                                                  env={"browserid": "firefoxos.persona.org", "verifier": "marketplace-dev.allizom.org"})
+
         self.marketplace = Marketplace(self.marionette, self.MARKETPLACE_DEV_NAME)
         self.marketplace.launch()
 
@@ -33,7 +37,7 @@ class TestMarketplaceLogin(GaiaTestCase):
         settings = self.marketplace.tap_settings()
         persona = settings.tap_sign_in()
 
-        persona.login(self.testvars['marketplace']['username'], self.testvars['marketplace']['password'])
+        persona.login(self.user.email, self.user.password)
 
         # switch back to Marketplace
         self.marionette.switch_to_frame()
@@ -46,7 +50,7 @@ class TestMarketplaceLogin(GaiaTestCase):
         settings.wait_for_sign_out_button()
 
         # Verify that user is logged in
-        self.assertEqual(self.testvars['marketplace']['username'], settings.email)
+        self.assertEqual(self.user.email, settings.email)
 
         # Sign out, which should return to the Marketplace home screen
         settings.tap_sign_out()

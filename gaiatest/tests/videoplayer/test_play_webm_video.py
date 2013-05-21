@@ -2,6 +2,7 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import time
 from gaiatest import GaiaTestCase
 from gaiatest.apps.videoplayer.app import VideoPlayer
 
@@ -29,11 +30,15 @@ class TestPlayWebMVideo(GaiaTestCase):
         fullscreen_video = video_player.tap_first_video_item()
 
         # Video will play automatically
-        # Tap on the toolbar to keep it visible
-        fullscreen_video.tap_control_bar()
+        # We'll wait for the controls to clear so we're 'safe' to proceed
+        time.sleep(2)
 
-        # The elapsed time != 0:00 is the only indication of the toolbar visible
-        self.assertNotEqual(fullscreen_video.elapsed_time, '00:00')
+        # We cannot tap the toolbar so let's just enable it with javascript
+        fullscreen_video.display_controls_with_js()
+
+        # The elapsed time > 0:00 denote the video is playing
+        zero_time = time.strptime('00:00', '%M:%S')
+        self.assertGreater(fullscreen_video.elapsed_time, zero_time)
 
         # Check the name too. This will only work if the toolbar is visible
         self.assertEqual(first_video_name, fullscreen_video.name)

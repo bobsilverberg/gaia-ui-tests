@@ -29,7 +29,7 @@ class Persona(Base):
 
         login.wait_for_email_input()
         login.type_email(email)
-        login.tap_next()
+        login.tap_continue()
 
         # if we login with an unverified user we have to confirm the password
         if login.form_section_id == "authentication_form":
