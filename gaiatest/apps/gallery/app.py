@@ -13,10 +13,12 @@ class Gallery(Base):
     _empty_gallery_title_locator = ('id', 'overlay-title')
     _empty_gallery_text_locator = ('id', 'overlay-text')
     _progress_bar_locator = ('id', 'progress')
+    _thumbnail_list_view_locator = ('id', 'thumbnail-list-view')
 
     def launch(self):
         Base.launch(self)
         self.wait_for_element_not_displayed(*self._progress_bar_locator)
+        self.wait_for_element_displayed(*self._thumbnail_list_view_locator)
 
     def wait_for_files_to_load(self, files_number):
         self.wait_for_condition(lambda m: m.execute_script('return window.wrappedJSObject.files.length') == files_number)
@@ -29,7 +31,7 @@ class Gallery(Base):
         first_gallery_item = self.marionette.find_elements(*self._gallery_items_locator)[0]
         self.marionette.tap(first_gallery_item)
         from gaiatest.apps.gallery.regions.fullscreen_image import FullscreenImage
-        return FullscreenImage(self.marionette, self.app)
+        return FullscreenImage(self.marionette)
 
     @property
     def empty_gallery_title(self):

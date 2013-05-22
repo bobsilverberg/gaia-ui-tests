@@ -11,7 +11,7 @@ class Login(Base):
     _persona_frame_locator = ('css selector', "iframe.screen[data-url*='persona.org/sign_in#NATIVE']")
 
     # persona login
-    _waiting_locator = ('css selector', 'body.waiting')
+    _body_loading_locator = ('css selector', 'body.loading')
     _email_input_locator = ('id', 'authentication_email')
     _password_input_locator = ('id', 'authentication_password')
     _continue_button_locator = ('css selector', '.continue.right')
@@ -31,10 +31,7 @@ class Login(Base):
         persona_iframe = self.marionette.find_element(*self._persona_frame_locator)
         self.marionette.switch_to_frame(persona_iframe)
 
-        self.wait_for_element_not_present(*self._waiting_locator)
-        # TODO: because of issue: https://github.com/mozilla/browserid/issues/3318 we can't wait for the right element
-        time.sleep(5)
-
+        self.wait_for_element_not_present(*self._body_loading_locator)
 
     def type_email(self, value):
         email_field = self.marionette.find_element(*self._email_input_locator)

@@ -8,13 +8,14 @@ from gaiatest.apps.base import PageRegion
 
 class EditPhoto(Base):
 
+    _edit_view_locator = ('id', 'edit-view')
     _edit_effect_button_locator = ('id', 'edit-effect-button')
     _effect_options_locator = ('css selector', '#edit-effect-options a')
     _edit_save_locator = ('id', 'edit-save-button')
 
     def __init__(self, marionette):
         Base.__init__(self, marionette)
-        self.wait_for_element_displayed(*self._edit_effect_button_locator)
+        self.wait_for_element_displayed(*self._edit_view_locator)
 
     def tap_edit_effects_button(self):
         self.marionette.tap(self.marionette.find_element(*self._edit_effect_button_locator))

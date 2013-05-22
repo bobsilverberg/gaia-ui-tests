@@ -9,6 +9,7 @@ from gaiatest.apps.base import Base
 
 class FullscreenImage(Base):
 
+    _fullscreen_view_locator = ('id', 'fullscreen-view')
     _current_image_locator = ('css selector', '#frames > div.frame[style ~= "translateX(0px);"] > img')
     _photos_toolbar_locator = ('id', 'fullscreen-toolbar')
     _delete_image_locator = ('id', 'fullscreen-delete-button')
@@ -16,10 +17,9 @@ class FullscreenImage(Base):
     _edit_photo_locator = ('id', 'fullscreen-edit-button')
     _tile_view_locator = ('id', 'fullscreen-back-button')
 
-    def __init__(self, marionette, app):
+    def __init__(self, marionette):
         Base.__init__(self, marionette)
-        self.wait_for_element_displayed(*self._current_image_locator)
-        self.app = app
+        self.wait_for_element_displayed(*self._fullscreen_view_locator)
 
     @property
     def is_photo_toolbar_displayed(self):
@@ -58,7 +58,10 @@ class FullscreenImage(Base):
     def tap_confirm_deletion_button(self):
         self.marionette.tap(self.marionette.find_element(*self._confirm_delete_locator))
         self.wait_for_element_not_displayed(*self._confirm_delete_locator)
-        self.marionette.switch_to_frame(self.app.frame)
+        from gaiatest.apps.gallery.app import Gallery
+        gallery = Gallery(self.marionette)
+        gallery.launch()
+        return gallery
 
     def tap_edit_button(self):
         self.marionette.tap(self.marionette.find_element(*self._edit_photo_locator))
@@ -67,6 +70,7 @@ class FullscreenImage(Base):
 
     def tap_tile_view_button(self):
         self.marionette.tap(self.marionette.find_element(*self._tile_view_locator))
+        self.wait_for_element_not_displayed(*self._fullscreen_view_locator)
         from gaiatest.apps.gallery.app import Gallery
         return Gallery(self.marionette)
 

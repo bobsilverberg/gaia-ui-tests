@@ -8,8 +8,6 @@ from gaiatest.apps.email.app import Email
 
 class TestSetupManualEmail(GaiaTestCase):
 
-    email_configured = False
-
     def setUp(self):
         GaiaTestCase.setUp(self)
         self.connect_to_network()
@@ -39,8 +37,6 @@ class TestSetupManualEmail(GaiaTestCase):
         setup.wait_for_setup_complete()
         setup.tap_continue()
         self.email.wait_for_header_area()
-
-        self.email_configured = True
 
         # check header area
         self.assertTrue(self.email.header.is_compose_visible)

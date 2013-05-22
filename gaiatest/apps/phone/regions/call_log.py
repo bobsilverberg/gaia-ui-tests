@@ -22,7 +22,7 @@ class CallLog(Phone):
 
     @property
     def is_all_calls_tab_selected(self):
-        return self.marionette.find_element(*self._all_calls_tab_locator).get_attribute('class') == 'selected'
+        return self.marionette.find_element(*self._all_calls_tab_locator).get_attribute('aria-selected') == 'true'
 
     @property
     def all_calls_count(self):

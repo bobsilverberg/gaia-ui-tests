@@ -26,6 +26,14 @@
       "smtp_hostname": "",
       "smtp_name": "",
       "smtp_port": ""
+    },
+    "ActiveSync":{
+      "name": "",
+      "email": "",
+      "password": "",
+      "active_sync_hostname": "",
+      "active_sync_username": ""
     }
+
   }
 }

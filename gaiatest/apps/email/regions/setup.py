@@ -54,9 +54,8 @@ class ManualSetupEmail(Base):
     _smtp_hostname_locator = ('css selector', 'section.card-setup-manual-config .sup-manual-smtp-hostname')
     _smtp_port_locator = ('css selector', 'section.card-setup-manual-config .sup-manual-smtp-port')
 
-    _activesync_username_locator = ('css selector', 'section.card-setup-manual-config .sup-manual-activesync-hostname')
-
-    _activesync_hostname_locator = ('css selector', 'section.card-setup-manual-config .sup-manual-activesync-username')
+    _activesync_hostname_locator = ('css selector', 'section.card-setup-manual-config .sup-manual-activesync-hostname')
+    _activesync_username_locator = ('css selector', 'section.card-setup-manual-config .sup-manual-activesync-username')
 
     _next_locator = ('css selector', '.sup-manual-next-btn')
     _continue_button_locator = ('class name', 'sup-show-mail-btn sup-form-btn recommend')

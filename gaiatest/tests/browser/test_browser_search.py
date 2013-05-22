@@ -8,7 +8,7 @@ from gaiatest.apps.browser.app import Browser
 
 class TestBrowserSearch(GaiaTestCase):
 
-    _bing_search_input_locator = ('name', 'q')
+    _google_search_input_locator = ('name', 'q')
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -24,7 +24,7 @@ class TestBrowserSearch(GaiaTestCase):
         browser.go_to_url(search_text)
 
         browser.switch_to_content()
-        self.wait_for_element_displayed(*self._bing_search_input_locator)
+        self.wait_for_element_displayed(*self._google_search_input_locator)
         self.assertTrue(search_text in self.marionette.title)
         self.assertEqual(search_text,
-                         self.marionette.find_element(*self._bing_search_input_locator).get_attribute('value'))
+                         self.marionette.find_element(*self._google_search_input_locator).get_attribute('value'))
