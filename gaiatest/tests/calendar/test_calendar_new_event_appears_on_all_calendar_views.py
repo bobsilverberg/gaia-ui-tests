@@ -30,19 +30,25 @@ class TestCalendar(GaiaTestCase):
         GaiaTestCase.setUp(self)
 
         if self.device.is_android_build:
-            # Setting the system time to a hardcoded datetime to avoid timezone issues
-            # Jan. 1, 2013, according to http://www.epochconverter.com/
-            _seconds_since_epoch = 1357043430
-            self.today = datetime.date.fromtimestamp(_seconds_since_epoch)
 
-            # set the system date to an expected date, and timezone to UTC
-            self.data_layer.set_time(_seconds_since_epoch * 1000)
-            self.data_layer.set_setting('time.timezone', 'Atlantic/Reykjavik')
+            # Setting the time on the device back to 12:00am of the current day
+            # this way the event created will always be on this day and we can check it easily
+            _seconds_since_epoch = self.marionette.execute_script("""
+                    var today = new Date();
+                    var yr = today.getFullYear();
+                    var mth = today.getMonth();
+                    var day = today.getDate();
+                    return new Date(yr, mth, day, 0, 0, 0).getTime();""")
+
+            self.today = datetime.datetime.fromtimestamp(_seconds_since_epoch / 1000)
+
+            # set the system date to the time
+            self.data_layer.set_time(_seconds_since_epoch)
         else:
             self.today = datetime.date.today()
 
         # launch the Calendar app
-        self.app = self.apps.launch('calendar')
+        self.app = self.apps.launch('Calendar')
 
     def test_that_new_event_appears_on_all_calendar_views(self):
         # https://github.com/mozilla/gaia-ui-tests/issues/102
@@ -112,17 +118,3 @@ class TestCalendar(GaiaTestCase):
         displayed_events = self.marionette.find_element(*day_view_time_slot_all_events_locator).text
         self.assertIn(event_title, displayed_events)
         self.assertIn(event_location, displayed_events)
-
-        # delete all events in the time slot
-        all_events = self.marionette.find_elements(*day_view_time_slot_individual_events_locator)
-        while len(all_events) > 0:
-            self.marionette.tap(all_events[0])
-
-            self.wait_for_element_displayed(*self._delete_event_button_locator)
-            delete_event_button = self.marionette.find_element(*self._delete_event_button_locator)
-            # TODO: remove this execute_script when bug 862167 has been fixed
-            self.marionette.execute_script("arguments[0].scrollIntoView(false);", [delete_event_button])
-            self.marionette.tap(delete_event_button)
-
-            self.wait_for_element_displayed(*self._day_view_locator)
-            all_events = self.marionette.find_elements(*day_view_time_slot_individual_events_locator)
