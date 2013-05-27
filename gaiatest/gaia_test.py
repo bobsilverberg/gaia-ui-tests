@@ -448,6 +448,9 @@ class GaiaTestCase(MarionetteTestCase):
         # Change language back to English
         self.data_layer.set_setting("language.current", "en-US")
 
+        # Switch off spanish keyboard before test
+        self.data_layer.set_setting("keyboard.layouts.spanish", False)
+
         # Change timezone back to PST
         self.data_layer.set_setting("time.timezone", "America/Los_Angeles")
 

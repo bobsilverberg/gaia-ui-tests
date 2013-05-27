@@ -41,8 +41,22 @@ class Keyboard(Base):
                     'Y': '¥Ÿ',
                     'Z': 'ŽŹŻ'}
 
+    # keyboard table
+    keyboard_table = ['english',
+                      'dvorak',
+                      'otherlatins',
+                      'cyrillic',
+                      'arabic',
+                      'hebrew',
+                      'zhuyin',
+                      'pinyin',
+                      'greek',
+                      'japanese',
+                      'portuguese',
+                      'spanish']
+
     # special keys locators
-    _language_key = '-3'
+    _language_key_locator = ("css selector", ".keyboard-row button[data-keycode='-3']")
     _numeric_sign_key = '-2'
     _alpha_key = '-1'
     _backspace_key = '8'
@@ -113,7 +127,7 @@ class Keyboard(Base):
 
         # find the extended key and perform the action chain
         extend_keys = self.marionette.find_elements(*self._highlight_key_locator)
-        if movement == True:
+        if movement is True:
             action.move(extend_keys[selection - 1]).perform()
         action.release().perform()
         time.sleep(1)
@@ -147,7 +161,7 @@ class Keyboard(Base):
             self._switch_to_keyboard()
             key_obj = self.marionette.find_element(*self._key_locator(key))
             action = Actions(self.marionette)
-            action.press(key_obj).wait(timeout/1000).release().perform()
+            action.press(key_obj).wait(timeout / 1000).release().perform()
             self.marionette.switch_to_frame()
 
     # this would go through fastest way to tap/click through a string
@@ -178,6 +192,36 @@ class Keyboard(Base):
             # after tap/click space key, it might get screwed up due to timing issue. adding 0.8sec for it.
             if ord(val) == int(self._space_key):
                 time.sleep(0.8)
+        self.marionette.switch_to_frame()
+
+    # Switch keyboard language
+    # Mapping of language code => {
+    # "ar":"ﺎﻠﻋﺮﺒﻳﺓ",
+    # "cz":"Česká",
+    # "de":"Deutsch",
+    # "el":"Greek"
+    # "en":"English",
+    # "en-Dvorak":"Dvorak",
+    # "es":"Español",
+    # "fr":"français",
+    # "he":"עִבְרִית",
+    # "nb":"Norsk",
+    # "pt_BR":"Português",
+    # "pl":"polski",
+    # "ru":"русский",
+    # "sk":"Slovenčina",
+    # "sr-Cyrl":"српска ћирилица",
+    # "sr-Latn":"srpski",
+    # "tr":"Türkçe"}
+    def switch_keyboard_language(self, lang_code):
+        keyboard_language_locator = ("css selector", ".keyboard-row button[data-keyboard='%s']" % lang_code)
+
+        self._switch_to_keyboard()
+        language_key = self.marionette.find_element(*self._language_key_locator)
+        action = Actions(self.marionette)
+        action.press(language_key).wait(2).perform()
+        target_kb_layout = self.marionette.find_element(*keyboard_language_locator)
+        action.move(target_kb_layout).release().perform()
         self.marionette.switch_to_frame()
 
     # switch to keyboard with numbers and special characters

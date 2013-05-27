@@ -22,7 +22,7 @@ class Settings(Base):
         _name_locator = ('css selector', 'a.tng-account-item-label')
 
         def tap(self):
-            self.marionette.tap(self.root_element)
+            self.root_element.tap()
             return EmailAccountSettings(self.marionette)
 
 
@@ -36,7 +36,7 @@ class EmailAccountSettings(Base):
         self.wait_for_element_displayed(*self._delete_account_locator)
 
     def tap_delete(self):
-        self.marionette.tap(self.marionette.find_element(*self._delete_account_locator))
+        self.marionette.find_element(*self._delete_account_locator).tap()
         return DeleteConfirmation(self.marionette)
 
 
@@ -50,4 +50,4 @@ class DeleteConfirmation(Base):
         self.wait_for_element_displayed(*self._delete_locator)
 
     def tap_delete(self):
-        self.marionette.find_element(*self._delete_locator).click()
+        self.marionette.find_element(*self._delete_locator).tap()

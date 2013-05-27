@@ -34,12 +34,13 @@ class Contacts(Base):
                 return contact
 
     def tap_new_contact(self):
-        self.marionette.tap(self.marionette.find_element(*self._new_contact_button_locator))
+        self.marionette.find_element(*self._new_contact_button_locator).tap()
         from gaiatest.apps.contacts.regions.contact_form import NewContact
         return NewContact(self.marionette)
 
     def tap_settings(self):
-        self.marionette.tap(self.marionette.find_element(*self._settings_button_locator))
+        # TODO: Switch to el.tap() when bug #875741 gets fixed
+        self.marionette.find_element(*self._settings_button_locator).click()
         from gaiatest.apps.contacts.regions.settings_form import SettingsForm
         return SettingsForm(self.marionette)
 
@@ -61,7 +62,7 @@ class Contacts(Base):
             return self.root_element.find_element(*self._full_name_locator).text
 
         def tap(self):
-            self.marionette.tap(self.root_element)
+            self.root_element.tap()
 
             from gaiatest.apps.contacts.regions.contact_details import ContactDetails
             return ContactDetails(self.marionette)

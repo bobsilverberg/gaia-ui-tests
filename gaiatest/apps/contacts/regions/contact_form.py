@@ -117,7 +117,7 @@ class ContactForm(Base):
         return self.marionette.find_element(*self._add_picture_link_locator).get_attribute('style')
 
     def tap_picture(self):
-        self.marionette.tap(self.marionette.find_element(*self._add_picture_link_locator))
+        self.marionette.find_element(*self._add_picture_link_locator).tap()
         # TODO return the appropriate class
 
     def wait_for_image_to_load(self):
@@ -141,28 +141,28 @@ class EditContact(ContactForm):
         self.wait_for_element_displayed(*self._update_locator)
 
     def tap_update(self):
-        self.marionette.tap(self.marionette.find_element(*self._update_locator))
+        self.marionette.find_element(*self._update_locator).tap()
         from gaiatest.apps.contacts.regions.contact_details import ContactDetails
         return ContactDetails(self.marionette)
 
     def tap_cancel(self):
-        self.marionette.tap(self.marionette.find_element(*self._cancel_locator))
+        self.marionette.find_element(*self._cancel_locator).tap()
         from gaiatest.apps.contacts.regions.contact_details import ContactDetails
         return ContactDetails(self.marionette)
 
     def tap_delete(self):
         delete_item = self.marionette.find_element(*self._delete_locator)
-        # TODO Bug 850819 - Remove scrollIntoView() and use single_tap()
+        # TODO Bug 875830 - Remove scrollIntoView() when bug resolved
         self.marionette.execute_script("arguments[0].scrollIntoView(false);", [delete_item])
-        self.marionette.tap(delete_item)
+        delete_item.tap()
 
     def tap_cancel_delete(self):
         self.wait_for_element_displayed(*self._delete_form_locator)
-        self.marionette.tap(self.marionette.find_element(*self._cancel_delete_locator))
+        self.marionette.find_element(*self._cancel_delete_locator).tap()
 
     def tap_confirm_delete(self):
         self.wait_for_element_displayed(*self._delete_form_locator)
-        self.marionette.tap(self.marionette.find_element(*self._confirm_delete_locator))
+        self.marionette.find_element(*self._confirm_delete_locator).tap()
         from gaiatest.apps.contacts.app import Contacts
         return Contacts(self.marionette)
 
@@ -176,6 +176,6 @@ class NewContact(ContactForm):
         self.wait_for_element_displayed(*self._done_button_locator)
 
     def tap_done(self):
-        self.marionette.tap(self.marionette.find_element(*self._done_button_locator))
+        self.marionette.find_element(*self._done_button_locator).tap()
         from gaiatest.apps.contacts.app import Contacts
         return Contacts(self.marionette)

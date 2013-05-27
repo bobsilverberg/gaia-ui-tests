@@ -68,27 +68,29 @@ class Browser(Base):
         self.marionette.switch_to_frame(self.app.frame)
 
     def tap_go_button(self):
-        self.marionette.tap(self.marionette.find_element(*self._url_button_locator))
+        self.marionette.find_element(*self._url_button_locator).tap()
         self.wait_for_throbber_not_visible()
         self.wait_for_element_displayed(*self._bookmark_button_locator)
 
     def tap_back_button(self):
         current_url = self.url
-        self.marionette.tap(self.marionette.find_element(*self._back_button_locator))
+        self.marionette.find_element(*self._back_button_locator).tap()
         self.wait_for_condition(lambda m: self.url != current_url)
 
     def tap_forward_button(self):
         current_url = self.url
-        self.marionette.tap(self.marionette.find_element(*self._forward_button_locator))
+        self.marionette.find_element(*self._forward_button_locator).tap()
         self.wait_for_condition(lambda m: self.url != current_url)
 
     def tap_bookmark_button(self):
-        self.marionette.tap(self.marionette.find_element(*self._bookmark_button_locator))
+        self.marionette.find_element(*self._bookmark_button_locator).tap()
         self.wait_for_element_displayed(*self._bookmark_menu_locator)
 
     def tap_add_bookmark_to_home_screen_choice_button(self):
         self.wait_for_element_displayed(*self._add_bookmark_to_home_screen_choice_locator)
-        self.marionette.tap(self.marionette.find_element(*self._add_bookmark_to_home_screen_choice_locator))
+        self.marionette.find_element(*self._add_bookmark_to_home_screen_choice_locator).tap()
+        # TODO: Remove sleep when Bug # 815115 is addressed, or if we can wait for a Javascript condition
+        time.sleep(1)
         # Switch to System app where the add bookmark dialog resides
         self.marionette.switch_to_frame()
         self.wait_for_element_displayed(*self._add_bookmark_to_home_screen_frame_locator)
@@ -97,7 +99,7 @@ class Browser(Base):
 
     def tap_add_bookmark_to_home_screen_dialog_button(self):
         self.wait_for_element_displayed(*self._add_bookmark_to_home_screen_dialog_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._add_bookmark_to_home_screen_dialog_button_locator))
+        self.marionette.find_element(*self._add_bookmark_to_home_screen_dialog_button_locator).tap()
         self.switch_to_chrome()
 
     def type_bookmark_title(self, value):
@@ -118,13 +120,14 @@ class Browser(Base):
         return self.marionette.find_element(*self._awesome_bar_locator).is_displayed()
 
     def tap_tab_badge_button(self):
-        self.marionette.tap(self.marionette.find_element(*self._tab_badge_locator))
+        self.wait_for_element_displayed(*self._tab_badge_locator)
+        self.marionette.find_element(*self._tab_badge_locator).tap()
 
         # TODO Wait for visibility when Marionette can detect the state of the tab list correctly
         self.wait_for_condition(lambda m: self._current_screen == 'tabs-screen')
 
     def tap_add_new_tab_button(self):
-        self.marionette.tap(self.marionette.find_element(*self._new_tab_button_locator))
+        self.marionette.find_element(*self._new_tab_button_locator).tap()
 
         # TODO Wait for visibility when Marionette can detect the state of the tab list correctly
         self.wait_for_condition(lambda m: self._current_screen == 'awesome-screen')
@@ -150,8 +153,7 @@ class Browser(Base):
     class Tab(PageRegion):
 
         def tap_tab(self):
-            # TODO replace with self.marionette.tap(self.root_element)
-            self.root_element.click()
+            self.root_element.tap()
 
             # TODO This wait is a workaround until Marionette can correctly interpret the displayed state
             self.wait_for_condition(lambda m: m.execute_script("return window.wrappedJSObject.Browser.currentScreen;") == 'page-screen')

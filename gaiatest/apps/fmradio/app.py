@@ -26,23 +26,23 @@ class FmRadio(Base):
 
     def tap_next(self):
         current_frequency = self.frequency
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_condition(lambda m: self.frequency != current_frequency)
 
     def tap_previous(self):
         current_frequency = self.frequency
-        self.marionette.tap(self.marionette.find_element(*self._prev_button_locator))
+        self.marionette.find_element(*self._prev_button_locator).tap()
         self.wait_for_condition(lambda m: self.frequency != current_frequency)
 
     def tap_power_button(self):
-        self.marionette.tap(self.marionette.find_element(*self._power_button_locator))
+        self.marionette.find_element(*self._power_button_locator).tap()
 
     def wait_for_radio_off(self):
         self.wait_for_condition(lambda m:self.is_power_button_on is False )
 
     def tap_add_favorite(self):
         current_favorite_channel_count = len(self.favorite_channels)
-        self.marionette.tap(self.marionette.find_element(*self._favorite_button_locator))
+        self.marionette.find_element(*self._favorite_button_locator).tap()
         self.wait_for_condition(lambda m: current_favorite_channel_count + 1 == len(self.favorite_channels))
 
     def wait_for_favorite_list_not_displayed(self):
@@ -69,4 +69,4 @@ class FmRadio(Base):
             return float(self.root_element.find_element(*self._frequency_locator).text)
 
         def remove(self):
-            self.marionette.tap(self.root_element.find_element(*self._remove_locator))
+            self.root_element.find_element(*self._remove_locator).tap()

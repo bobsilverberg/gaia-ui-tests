@@ -27,7 +27,7 @@ class TestContacts(GaiaTestCase):
         contacts_app.launch()
 
         pre_contacts_count = len(contacts_app.contacts)
-        self.assertEqual(pre_contacts_count, 1, "Should insert one contact befor run this test.")
+        self.assertEqual(pre_contacts_count, 1, "Should insert one contact before running this test.")
 
         contact_item = contacts_app.contact(self.contact['givenName'])
         contact_item_detail = contact_item.tap()

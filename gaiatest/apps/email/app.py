@@ -18,7 +18,6 @@ class Email(Base):
     _syncing_locator = ('css selector', '.msg-messages-syncing > .small')
     _manual_setup_locator = ('css selector', '.sup-manual-config-btn')
 
-
     def basic_setup_email(self, name, email, password):
 
         setup = SetupEmail(self.marionette)
@@ -32,6 +31,27 @@ class Email(Base):
         setup.tap_continue()
         self.wait_for_condition(lambda m: self.is_element_displayed(*self._header_area_locator))
 
+    def setup_IMAP_email(self, imap):
+        setup = self.tap_manual_setup()
+        setup.type_name(imap['name'])
+        setup.type_email(imap['email'])
+        setup.type_password(imap['password'])
+
+        setup.select_account_type('IMAP+SMTP')
+
+        setup.type_imap_hostname(imap['imap_hostname'])
+        setup.type_imap_name(imap['imap_name'])
+        setup.type_imap_port(imap['imap_port'])
+
+        setup.type_smtp_hostname(imap['smtp_hostname'])
+        setup.type_smtp_name(imap['smtp_name'])
+        setup.type_smtp_port(imap['smtp_port'])
+
+        setup.tap_next()
+        setup.wait_for_setup_complete()
+        setup.tap_continue()
+        self.wait_for_header_area()
+
     def delete_email_account(self, index):
 
         toolbar = self.header.tap_menu()
@@ -43,7 +63,7 @@ class Email(Base):
 
     def tap_manual_setup(self):
         self.wait_for_element_displayed(*self._manual_setup_locator)
-        self.marionette.tap(self.marionette.find_element(*self._manual_setup_locator))
+        self.marionette.find_element(*self._manual_setup_locator).tap()
         return ManualSetupEmail(self.marionette)
 
     @property
@@ -64,19 +84,22 @@ class Email(Base):
     def wait_for_header_area(self):
         self.wait_for_element_displayed(*self._header_area_locator)
 
+
 class Header(Base):
-    _menu_button_locator = ('css selector', '.msg-folder-list-btn')
-    _compose_button_locator = ('css selector', '.msg-compose-btn')
-    _label_locator = ('css selector', '.msg-list-header-folder-label.header-label')
+    _menu_button_locator = ('css selector', '.card.center .msg-folder-list-btn')
+    _compose_button_locator = ('css selector', '.card.center .msg-compose-btn')
+    _label_locator = ('css selector', '.card.center .msg-list-header-folder-label.header-label')
 
     def tap_menu(self):
-        self.marionette.tap(self.marionette.find_element(*self._menu_button_locator))
+        self.marionette.find_element(*self._menu_button_locator).tap()
         toolbar = ToolBar(self.marionette)
         self.wait_for_condition(lambda m: toolbar.is_settings_visible)
         return toolbar
 
     def tap_compose(self):
-        self.marionette.tap(self.marionette.find_element(*self._compose_button_locator))
+        self.marionette.find_element(*self._compose_button_locator).tap()
+        from gaiatest.apps.email.regions.new_email import NewEmail
+        return NewEmail(self.marionette)
 
     @property
     def label(self):
@@ -98,16 +121,17 @@ class ToolBar(Base):
     _settings_locator = ('css selector', '.fld-nav-settings-btn')
 
     def tap_refresh(self):
-        self.marionette.tap(self.marionette.find_element(*self._refresh_locator))
+        self.marionette.find_element(*self._refresh_locator).tap()
 
     def tap_search(self):
-        self.marionette.tap(self.marionette.find_element(*self._search_locator))
+        self.marionette.find_element(*self._search_locator).tap()
 
     def tap_edit(self):
-        self.marionette.tap(self.marionette.find_element(*self._edit_locator))
+        self.marionette.find_element(*self._edit_locator).tap()
 
     def tap_settings(self):
-        self.marionette.tap(self.marionette.find_element(*self._settings_locator))
+        # TODO: el.tap() if not tapping settings button
+        self.marionette.find_element(*self._settings_locator).click()
 
     @property
     def is_refresh_visible(self):
@@ -132,3 +156,10 @@ class Message(PageRegion):
     @property
     def subject(self):
         return self.root_element.find_element(*self._subject_locator).text
+
+    def tap_subject(self):
+        el = self.root_element.find_element(*self._subject_locator)
+        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [el])
+        self.marionette.tap(self.root_element.find_element(*self._subject_locator))
+        from gaiatest.apps.email.regions.read_email import ReadEmail
+        return ReadEmail(self.marionette)

@@ -27,13 +27,13 @@ class SetupEmail(Base):
         self.marionette.find_element(*self._password_locator).send_keys(value)
 
     def tap_next(self):
-        self.marionette.tap(self.marionette.find_element(*self._next_locator))
+        self.marionette.find_element(*self._next_locator).tap()
 
     def wait_for_setup_complete(self):
         self.wait_for_element_displayed(*self._continue_button_locator)
 
     def tap_continue(self):
-        self.marionette.tap(self.marionette.find_element(*self._continue_button_locator))
+        self.marionette.find_element(*self._continue_button_locator).tap()
 
 
 class ManualSetupEmail(Base):
@@ -129,10 +129,10 @@ class ManualSetupEmail(Base):
         el.send_keys(value)
 
     def tap_next(self):
-        self.marionette.tap(self.marionette.find_element(*self._next_locator))
+        self.marionette.find_element(*self._next_locator).tap()
 
     def wait_for_setup_complete(self):
         self.wait_for_element_displayed(*self._continue_button_locator)
 
     def tap_continue(self):
-        self.marionette.tap(self.marionette.find_element(*self._continue_button_locator))
+        self.marionette.find_element(*self._continue_button_locator).tap()

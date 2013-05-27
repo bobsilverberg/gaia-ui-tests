@@ -56,15 +56,15 @@ class Clock(Base):
         self.wait_for_element_displayed(*self._banner_countdown_notification_locator)
 
     def tap_analog_display(self):
-        self.marionette.tap(self.marionette.find_element(*self._analog_clock_display_locator))
+        self.marionette.find_element(*self._analog_clock_display_locator).tap()
         self.wait_for_element_displayed(*self._digital_clock_display_locator)
 
     def tap_digital_display(self):
-        self.marionette.tap(self.marionette.find_element(*self._digital_clock_display_locator))
+        self.marionette.find_element(*self._digital_clock_display_locator).tap()
         self.wait_for_element_displayed(*self._analog_clock_display_locator)
 
     def tap_new_alarm(self):
-        self.marionette.tap(self.marionette.find_element(*self._alarm_create_new_locator))
+        self.marionette.find_element(*self._alarm_create_new_locator).tap()
 
         from gaiatest.apps.clock.regions.alarm import NewAlarm
         new_alarm = NewAlarm(self.marionette)
@@ -92,9 +92,10 @@ class Clock(Base):
             return self.root_element.find_element(*self._check_box_locator).is_selected()
 
         def tap_checkbox(self):
-            self.marionette.tap(self.root_element.find_element(*self._enable_button_locator))
+            self.root_element.find_element(*self._enable_button_locator).tap()
 
         def tap(self):
-            self.marionette.tap(self.root_element.find_element(*self._tap_locator))
+            self.wait_for_element_displayed(*self._tap_locator)
+            self.root_element.find_element(*self._tap_locator).tap()
             from gaiatest.apps.clock.regions.alarm import EditAlarm
             return EditAlarm(self.marionette)

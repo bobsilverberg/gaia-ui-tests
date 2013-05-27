@@ -40,26 +40,27 @@ class ContactDetails(Base):
         self.wait_for_element_displayed(*self._call_phone_number_button_locator)
 
     def tap_phone_number(self):
-        self.marionette.tap(self.marionette.find_element(*self._call_phone_number_button_locator))
+        self.marionette.find_element(*self._call_phone_number_button_locator).tap()
         from gaiatest.apps.phone.regions.call_screen import CallScreen
         return CallScreen(self.marionette)
 
     def tap_send_sms(self):
-        self.marionette.tap(self.marionette.find_element(*self._send_sms_button_locator))
+        self.marionette.find_element(*self._send_sms_button_locator).tap()
         # TODO: return SMS app when implemented
 
     def tap_edit(self):
-        self.marionette.tap(self.marionette.find_element(*self._edit_contact_button_locator))
+        self.wait_for_element_displayed(*self._edit_contact_button_locator)
+        self.marionette.find_element(*self._edit_contact_button_locator).tap()
         from gaiatest.apps.contacts.regions.contact_form import EditContact
         return EditContact(self.marionette)
 
     def tap_back(self):
-        self.marionette.tap(self.marionette.find_element(*self._back_button_locator))
+        self.marionette.find_element(*self._back_button_locator).tap()
         from gaiatest.apps.contacts.app import Contacts
         return Contacts(self.marionette)
 
     def tap_add_remove_favorite(self):
-        self.marionette.tap(self.marionette.find_element(*self._add_remove_favorite_button_locator))
+        self.marionette.find_element(*self._add_remove_favorite_button_locator).tap()
         self.wait_for_element_displayed(*self._add_remove_favorite_button_locator)
 
     @property

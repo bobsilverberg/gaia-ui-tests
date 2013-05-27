@@ -18,11 +18,11 @@ class EditPhoto(Base):
         self.wait_for_element_displayed(*self._edit_view_locator)
 
     def tap_edit_effects_button(self):
-        self.marionette.tap(self.marionette.find_element(*self._edit_effect_button_locator))
+        self.marionette.find_element(*self._edit_effect_button_locator).tap()
         self.wait_for_element_displayed(*self._effect_options_locator)
 
     def tap_edit_save_button(self):
-        self.marionette.tap(self.marionette.find_element(*self._edit_save_locator))
+        self.marionette.find_element(*self._edit_save_locator).tap()
         from gaiatest.apps.gallery.app import Gallery
         return Gallery(self.marionette)
 
@@ -34,5 +34,5 @@ class EditPhoto(Base):
     class Effect(PageRegion):
 
         def tap(self):
-            self.marionette.tap(self.root_element)
+            self.root_element.tap()
             self.wait_for_condition(lambda m: 'selected' in self.root_element.get_attribute('class'))

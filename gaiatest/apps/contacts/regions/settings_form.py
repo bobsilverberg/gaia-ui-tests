@@ -23,7 +23,8 @@ class SettingsForm(Base):
         self.wait_for_element_displayed(*self._settings_close_button_locator)
 
     def tap_order_by_last_name(self):
-        self.marionette.tap(self.marionette.find_element(*self._order_by_last_name_locator))
+        self.wait_for_element_displayed(*self._order_by_last_name_locator)
+        self.marionette.find_element(*self._order_by_last_name_locator).click()
 
     @property
     def order_by_last_name(self):
@@ -31,12 +32,13 @@ class SettingsForm(Base):
 
     def tap_import_from_sim(self):
         self.wait_for_element_displayed(*self._import_from_sim_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._import_from_sim_button_locator))
+        self.marionette.find_element(*self._import_from_sim_button_locator).tap()
         self.wait_for_element_not_displayed(*self._loading_overlay_locator)
         from gaiatest.apps.contacts.app import Contacts
         return Contacts(self.marionette)
 
     def tap_done(self):
-        self.marionette.tap(self.marionette.find_element(*self._settings_close_button_locator))
+        self.wait_for_element_displayed(*self._settings_close_button_locator)
+        self.marionette.find_element(*self._settings_close_button_locator).click()
         from gaiatest.apps.contacts.app import Contacts
         return Contacts(self.marionette)

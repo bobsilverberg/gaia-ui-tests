@@ -26,9 +26,10 @@ class TestBrowserNavigation(GaiaTestCase):
         self.verify_home_page()
 
         community_link = self.marionette.find_element(*self._community_link_locator)
-        # TODO: remove this execute_script when bug 833370 has been fixed
-        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [community_link])
-        self.marionette.tap(community_link)
+        community_link.tap()
+        # # TODO: remove this execute_script when bug 833370 has been fixed
+        # self.marionette.execute_script("arguments[0].scrollIntoView(false);", [community_link])
+        # self.marionette.tap(community_link)
 
         self.verify_community_page()
         browser.switch_to_chrome()

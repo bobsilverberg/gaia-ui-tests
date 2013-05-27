@@ -29,7 +29,7 @@ class Gallery(Base):
 
     def tap_first_gallery_item(self):
         first_gallery_item = self.marionette.find_elements(*self._gallery_items_locator)[0]
-        self.marionette.tap(first_gallery_item)
+        first_gallery_item.tap()
         from gaiatest.apps.gallery.regions.fullscreen_image import FullscreenImage
         return FullscreenImage(self.marionette)
 

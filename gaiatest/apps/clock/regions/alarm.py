@@ -40,6 +40,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._repeat_menu_locator).text
 
     def select_repeat(self, value):
+        # TODO: Switch to el.tap() when bug #875474  gets fixed
         self.marionette.tap(self.marionette.find_element(*self._repeat_menu_locator))
         self.select(value)
 
@@ -48,6 +49,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._snooze_menu_locator).text
 
     def select_snooze(self, value):
+        # TODO: Switch to el.tap() when bug #875474  gets fixed
         self.marionette.tap(self.marionette.find_element(*self._snooze_menu_locator))
         self.select(value)
 
@@ -56,6 +58,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._sound_menu_locator).text
 
     def select_sound(self, value):
+        # TODO: Switch to el.tap() when bug #875474  gets fixed
         self.marionette.tap(self.marionette.find_element(*self._sound_menu_locator))
         self.select(value)
 
@@ -63,7 +66,8 @@ class NewAlarm(Clock):
         self.wait_for_element_displayed(*self._picker_container_locator)
 
     def tap_done(self):
-        self.marionette.tap(self.marionette.find_element(*self._done_locator))
+        self.wait_for_element_displayed(*self._done_locator)
+        self.marionette.find_element(*self._done_locator).tap()
 
         clock = Clock(self.marionette)
         clock.wait_for_banner_displayed()
@@ -148,5 +152,6 @@ class EditAlarm(NewAlarm):
         self.wait_for_element_displayed(*self._alarm_delete_button_locator)
 
     def tap_delete(self):
+        # TODO: Switch to el.tap() when bug #875478 gets fixed
         self.marionette.tap(self.marionette.find_element(*self._alarm_delete_button_locator))
         return Clock(self.marionette)

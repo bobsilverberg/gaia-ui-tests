@@ -50,26 +50,25 @@ class Login(Base):
         password_field.send_keys(value)
 
     def tap_continue(self):
-        next_button = self.marionette.find_element(*self._continue_button_locator)
-        # TODO:  Remove workaround after bug 845849
-        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [next_button])
-        self.marionette.tap(next_button)
+        continue_button = self.marionette.find_element(*self._continue_button_locator)
+        self.wait_for_element_displayed(*self._continue_button_locator)
+        continue_button.tap()
         self.wait_for_element_not_displayed(*self._continue_button_locator)
 
     def tap_verify_user(self):
-        self.marionette.tap(self.marionette.find_element(*self._verify_user_locator))
+        self.marionette.find_element(*self._verify_user_locator).tap()
 
     def tap_sign_in(self):
-        self.marionette.tap(self.marionette.find_element(*self._sign_in_button_locator))
+        self.marionette.find_element(*self._sign_in_button_locator).tap()
 
     def tap_this_is_not_me(self):
-        self.marionette.tap(self.marionette.find_element(*self._this_is_not_me_locator))
+        self.marionette.find_element(*self._this_is_not_me_locator).tap()
 
     def tap_returning(self):
-        self.marionette.tap(self.marionette.find_element(*self._returning_button_locator))
+        self.marionette.find_element(*self._returning_button_locator).tap()
 
     def tap_this_session_only(self):
-        self.marionette.tap(self.marionette.find_element(*self._this_session_only_button_locator))
+        self.marionette.find_element(*self._this_session_only_button_locator).tap()
 
     @property
     def form_section_id(self):

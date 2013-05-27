@@ -31,7 +31,7 @@ class TestYouTube(GaiaTestCase):
 
         # Tap the video
         self.wait_for_element_present(*self._video_container_locator)
-        self.marionette.tap(self.marionette.find_element(*self._video_container_locator))
+        self.marionette.find_element(*self._video_container_locator).tap()
         self.marionette.switch_to_frame()
         fullscreen_video = FullscreenVideo(self.marionette)
 
