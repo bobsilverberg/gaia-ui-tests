@@ -14,7 +14,7 @@ class TestMarketplaceLogin(GaiaTestCase):
     # Marketplace locators
     _settings_button_locator = ('css selector', 'a.header-button.settings')
     _sign_in_button_locator = ('css selector', 'a.button.browserid')
-    _signed_in_notification_locator = ('id', 'notification')
+    _signed_in_notification_locator = ('css selector', '#notification.show')
     _sign_out_button_locator = ('css selector', 'a.button.logout')
 
     _email_account_field_locator = ('id', 'email')
@@ -43,11 +43,8 @@ class TestMarketplaceLogin(GaiaTestCase):
         self.marionette.switch_to_frame()
         self.marketplace.launch()
 
-        # tap on the signed-in notification at the bottom of the screen to dismiss it
-        self.wait_for_element_displayed(*self._signed_in_notification_locator)
-        self.marionette.tap(self.marionette.find_element(*self._signed_in_notification_locator))
-
-        settings.wait_for_sign_out_button()
+        # wait for signed-in notification at the bottom of the screen to clear
+        self.wait_for_element_not_displayed(*self._signed_in_notification_locator)
 
         # Verify that user is logged in
         self.assertEqual(self.user.email, settings.email)

@@ -56,7 +56,7 @@ class TestSearchMarketplaceAndInstallApp(GaiaTestCase):
     def confirm_installation(self):
         # TODO add this to the system app object when we have one
         self.wait_for_element_displayed(*self._yes_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._yes_button_locator))
+        self.marionette.find_element(*self._yes_button_locator).tap()
         self.wait_for_element_not_displayed(*self._yes_button_locator)
 
     def tearDown(self):

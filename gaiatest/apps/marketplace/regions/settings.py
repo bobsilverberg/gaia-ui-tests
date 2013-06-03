@@ -19,7 +19,7 @@ class Settings(Base):
         self.wait_for_element_displayed(*self._save_locator)
 
     def tap_back(self):
-        self.marionette.tap(self.marionette.find_element(*self._back_button_locator))
+        self.marionette.find_element(*self._back_button_locator).tap()
         from gaiatest.apps.marketplace.app import Marketplace
         return Marketplace(self.marionette)
 
@@ -37,8 +37,9 @@ class Settings(Base):
 
     def tap_sign_out(self):
         sign_out_button = self.marionette.find_element(*self._sign_out_button_locator)
-        # TODO: click works but not tap
-        sign_out_button.click()
+        # TODO: remove scrollIntoView hack
+        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [sign_out_button])
+        sign_out_button.tap()
 
     @property
     def email(self):

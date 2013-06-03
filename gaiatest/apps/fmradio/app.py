@@ -2,6 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+from marionette.marionette import Actions
+
 from gaiatest.apps.base import Base
 from gaiatest.apps.base import PageRegion
 
@@ -22,7 +24,7 @@ class FmRadio(Base):
 
         dialer_x_center = int(dialer.size['width'] / 2)
         dialer_y_center = int(dialer.size['height'] / 2)
-        self.marionette.flick(dialer, dialer_x_center, dialer_y_center, 0, 300, 800)
+        Actions(self.marionette).flick(dialer, dialer_x_center, dialer_y_center, 0, 800, 800).perform()
 
     def tap_next(self):
         current_frequency = self.frequency

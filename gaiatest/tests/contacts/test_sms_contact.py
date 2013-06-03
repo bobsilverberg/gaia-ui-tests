@@ -39,20 +39,18 @@ class TestContacts(GaiaTestCase):
         sms_iframe = self.marionette.find_element(*self._sms_app_iframe_locator)
         self.marionette.switch_to_frame(sms_iframe)
 
-        self.wait_for_condition(
-            lambda m: m.find_element(*self._contact_carrier_locator).text != "Carrier unknown")
-
         expected_name = self.contact['givenName'] + " " + self.contact['familyName']
         expected_tel = self.contact['tel']['value']
 
-        recipients_list = self.marionette.find_elements(*self._recipients_list_locator)
-        # Check that there are two recipients listed
+        # Wait for two recipients listed - the last javascript performed on the page
         # One is from contacts app and one is the manual entry option
-        self.assertEqual(len(recipients_list), 2)
+        self.wait_for_condition(lambda m: len(m.find_elements(*self._recipients_list_locator)) == 2)
 
         # Now check the first listed is from contacts app
-        # Name and phone number have been passed in correctly
+        recipients_list = self.marionette.find_elements(*self._recipients_list_locator)
         first_recipient = recipients_list[0]
+
+        # Name and phone number have been passed in correctly
         self.assertEqual(first_recipient.text, expected_name)
         self.assertEqual(first_recipient.get_attribute('data-number'),
                          expected_tel)

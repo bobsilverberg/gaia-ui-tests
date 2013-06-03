@@ -47,7 +47,7 @@ class TestEverythingMe(GaiaTestCase):
 
         # Tap on the 'Social' category
         social = self.marionette.find_element(*self._social_category_locator)
-        self.marionette.tap(social)
+        social.tap()
 
         self.wait_for_element_displayed(*self._app_icon_locator)
 
