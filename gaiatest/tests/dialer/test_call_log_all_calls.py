@@ -14,13 +14,14 @@ class TestCallLogAllCalls(GaiaTestCase):
         # delete any existing call log entries - call log needs to be loaded
         self.phone = Phone(self.marionette)
         self.phone.launch()
-        self.phone.tap_call_log_toolbar_button()
-        self.data_layer.delete_all_call_log_entries()
-        # switch back to keypad for the test
-        self.phone.tap_keypad_toolbar_button()
 
     def test_call_log_all_calls(self):
         # https://moztrap.mozilla.org/manage/case/1306/
+
+        self.phone.tap_call_log_toolbar_button()
+
+        # switch back to keypad for the test
+        self.phone.tap_keypad_toolbar_button()
 
         test_phone_number = self.testvars['remote_phone_number']
 

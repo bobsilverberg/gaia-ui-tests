@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
+from marionette.marionette import Actions
 
 
 class TestLockScreen(GaiaTestCase):
@@ -55,7 +56,7 @@ class TestLockScreen(GaiaTestCase):
         end_animation_position = lockscreen_area.size['height'] - unlock_handle.size['height']
 
         # Flick from unlock handle to (0, -end_animation_position) over 800ms duration
-        self.marionette.flick(unlock_handle, unlock_handle_x_centre, unlock_handle_y_centre, 0, 0 - end_animation_position, 800)
+        Actions(self.marionette).flick(unlock_handle, unlock_handle_x_centre, unlock_handle_y_centre, 0, 0 - end_animation_position, 800).perform()
 
         # Wait for the svg to animate and handle to disappear
         # TODO add assertion that unlock buttons are visible after bug 813561 is fixed

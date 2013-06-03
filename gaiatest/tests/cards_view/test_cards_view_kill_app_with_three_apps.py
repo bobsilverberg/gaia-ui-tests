@@ -44,7 +44,7 @@ class TestCardsViewThreeApps(GaiaTestCase):
 
         # Find the close icon for the current app
         close_third_app_button = self.marionette.find_element(*self.test_apps[2]['close_button_locator'])
-        self.marionette.tap(close_third_app_button)
+        close_third_app_button.tap()
 
         self.marionette.switch_to_frame()
 

@@ -32,7 +32,7 @@ class TestSettingsWifi(GaiaTestCase):
         # navigate to wifi settings
         self.wait_for_element_present(*self._wifi_menu_item_locator)
         wifi_menu_item = self.marionette.find_element(*self._wifi_menu_item_locator)
-        self.marionette.tap(wifi_menu_item)
+        wifi_menu_item.tap()
 
         # enable wifi
         self.wait_for_element_present(*self._wifi_enabled_checkbox_locator)
@@ -40,7 +40,7 @@ class TestSettingsWifi(GaiaTestCase):
         self.assertIsNone(enabled_checkbox.get_attribute('checked'))
         # we have to tap on the label rather than the input
         enabled_label = self.marionette.find_element(*self._wifi_enabled_label_locator)
-        self.marionette.tap(enabled_label)
+        enabled_label.tap()
 
         # Wait for some networks to be found
         self.wait_for_condition(lambda m: len(m.find_elements(*self._available_networks_locator)) > 0,
@@ -48,7 +48,7 @@ class TestSettingsWifi(GaiaTestCase):
 
         this_network_locator = ('xpath', "//li/a[text()='%s']" % self.testvars['wifi']['ssid'])
         wifi_network = self.marionette.find_element(*this_network_locator)
-        self.marionette.tap(wifi_network)
+        wifi_network.tap()
 
         if self.testvars['wifi'].get('keyManagement'):
             password = self.testvars['wifi'].get('psk') or self.testvars['wifi'].get('wep')
@@ -59,7 +59,7 @@ class TestSettingsWifi(GaiaTestCase):
             password_input = self.marionette.find_element(*self._password_input_locator)
             password_input.send_keys(password)
             ok = self.marionette.find_element(*self._password_ok_button_locator)
-            self.marionette.tap(ok)
+            ok.tap()
 
         self.wait_for_condition(
             lambda m: m.find_element(*self._connected_message_locator).text == "Connected")

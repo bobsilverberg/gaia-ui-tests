@@ -4,7 +4,6 @@
 
 from gaiatest import GaiaTestCase
 
-import time
 import re
 
 
@@ -100,23 +99,21 @@ class TestFtu(GaiaTestCase):
 
         # select en-US due to the condition of this test is only for en-US
         language_item = self.marionette.find_element(*self.create_language_locator("en-US"))
-        # Scroll it into view due to Marionette bug
-        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [language_item])
-        self.marionette.tap(language_item)
+        language_item.tap()
 
         # Tap next
         self.wait_for_element_displayed(*self._next_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_cell_data_locator)
 
         # Tap enable data
-        self.marionette.tap(self.marionette.find_element(*self._enable_data_checkbox_locator))
+        self.marionette.find_element(*self._enable_data_checkbox_locator).tap()
 
         self.wait_for_condition(lambda m: self.data_layer.is_cell_data_connected,
                                 message="Cell data was not connected by FTU app")
 
         # Tap next
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_wifi_locator)
 
         # Wait for some networks to be found
@@ -124,7 +121,7 @@ class TestFtu(GaiaTestCase):
                                 message="No networks listed on screen")
 
         wifi_network = self.marionette.find_element('id', self.testvars['wifi']['ssid'])
-        self.marionette.tap(wifi_network)
+        wifi_network.tap()
 
         # This is in the event we are using a Wifi Network that requires a password
         # We cannot be sure of this thus need the logic
@@ -133,7 +130,7 @@ class TestFtu(GaiaTestCase):
             self.wait_for_element_displayed(*self._password_input_locator)
             password = self.marionette.find_element(*self._password_input_locator)
             password.send_keys(self.testvars['wifi'].get('psk') or self.testvars['wifi'].get('wep'))
-            self.marionette.tap(self.marionette.find_element(*self._join_network_locator))
+            self.marionette.find_element(*self._join_network_locator).tap()
 
         self.wait_for_condition(
             lambda m: m.find_element(
@@ -147,7 +144,7 @@ class TestFtu(GaiaTestCase):
         self.marionette.switch_to_frame(self.app.frame)
 
         # Tap next
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_date_time_locator)
 
         # Set timezone
@@ -165,12 +162,12 @@ class TestFtu(GaiaTestCase):
                          "UTC+06:00 Asia/Almaty")
 
         # Tap next
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_import_contacts_locator)
 
         # Tap import from SIM
         # You can do this as many times as you like without db conflict
-        self.marionette.tap(self.marionette.find_element(*self._import_from_sim_locator))
+        self.marionette.find_element(*self._import_from_sim_locator).tap()
 
         # pass third condition when contacts are 0~N
         self.wait_for_condition(lambda m: self._pattern_contacts.match(m.find_element(*self._sim_import_feedback_locator).text) is not None,
@@ -192,15 +189,15 @@ class TestFtu(GaiaTestCase):
         self.marionette.switch_to_frame(self.app.frame)
 
         # Tap next
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_welcome_browser_locator)
 
         # Tap the statistics box and check that it sets a setting
         # TODO assert via settings API that this is set. Currently it is not used
-        self.marionette.tap(self.marionette.find_element(*self._enable_statistic_checkbox_locator))
+        self.marionette.find_element(*self._enable_statistic_checkbox_locator).tap()
 
         # Tap next
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_browser_privacy_locator)
 
         # Enter a dummy email address and check it set inside the os
@@ -208,11 +205,11 @@ class TestFtu(GaiaTestCase):
         self.marionette.find_element(*self._email_field_locator).send_keys("testuser@mozilla.com")
 
         # Tap next
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_finish_locator)
 
         # Skip the tour
-        self.marionette.tap(self.marionette.find_element(*self._skip_tour_button_locator))
+        self.marionette.find_element(*self._skip_tour_button_locator).tap()
 
         # Switch back to top level now that FTU app is gone
         self.marionette.switch_to_frame()
@@ -238,10 +235,10 @@ class TestFtu(GaiaTestCase):
         # Loop options until we find the match
         for li in options:
             if li.text == match_string:
-                self.marionette.tap(li)
+                li.tap()
                 break
 
-        self.marionette.tap(close_button)
+        close_button.tap()
 
         # Now back to app
         self.marionette.switch_to_frame(self.app.frame)

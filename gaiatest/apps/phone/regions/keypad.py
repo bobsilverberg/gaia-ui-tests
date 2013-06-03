@@ -29,7 +29,7 @@ class Keypad(Phone):
                 zero_button = self.marionette.find_element('css selector', 'div.keypad-key[data-value="0"]')
                 Actions(self.marionette).long_press(zero_button, 1.2).perform()
             else:
-                self.marionette.tap(self.marionette.find_element('css selector', 'div.keypad-key[data-value="%s"]' % i))
+                self.marionette.find_element('css selector', 'div.keypad-key[data-value="%s"]' % i).tap()
                 time.sleep(0.25)
 
     def call_number(self, value):
@@ -37,7 +37,6 @@ class Keypad(Phone):
         return self.tap_call_button()
 
     def tap_call_button(self, switch_to_call_screen=True):
-        call_button = self.marionette.find_element(*self._call_bar_locator)
-        self.marionette.tap(call_button)
+        self.marionette.find_element(*self._call_bar_locator).tap()
         if switch_to_call_screen:
             return CallScreen(self.marionette)

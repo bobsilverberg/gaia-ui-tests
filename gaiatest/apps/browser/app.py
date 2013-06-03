@@ -68,7 +68,9 @@ class Browser(Base):
         self.marionette.switch_to_frame(self.app.frame)
 
     def tap_go_button(self):
-        self.marionette.find_element(*self._url_button_locator).tap()
+        url_button = self.marionette.find_element(*self._url_button_locator)
+        # TODO Tap one pixel above bottom edge to dodge the System update notification banner bug 876723
+        url_button.tap(y=(url_button.size['height']-1))
         self.wait_for_throbber_not_visible()
         self.wait_for_element_displayed(*self._bookmark_button_locator)
 
@@ -121,13 +123,18 @@ class Browser(Base):
 
     def tap_tab_badge_button(self):
         self.wait_for_element_displayed(*self._tab_badge_locator)
-        self.marionette.find_element(*self._tab_badge_locator).tap()
+        tab_badge_button = self.marionette.find_element(*self._tab_badge_locator)
+        # TODO Tap above bottom edge to dodge the System update notification banner bug 876723
+        tab_badge_button.tap(y=(tab_badge_button.size['height']-4))
+        #tab_badge_button.tap()
 
         # TODO Wait for visibility when Marionette can detect the state of the tab list correctly
         self.wait_for_condition(lambda m: self._current_screen == 'tabs-screen')
 
     def tap_add_new_tab_button(self):
-        self.marionette.find_element(*self._new_tab_button_locator).tap()
+        new_tab_button = self.marionette.find_element(*self._new_tab_button_locator)
+        # TODO Tap one pixel above bottom edge to dodge the System update notification banner bug 876723
+        new_tab_button.tap(y=(new_tab_button.size['height']-1))
 
         # TODO Wait for visibility when Marionette can detect the state of the tab list correctly
         self.wait_for_condition(lambda m: self._current_screen == 'awesome-screen')
@@ -153,7 +160,8 @@ class Browser(Base):
     class Tab(PageRegion):
 
         def tap_tab(self):
-            self.root_element.tap()
+            # TODO: Bug 876411 - Click works but tap does not on tabs on browser app
+            self.root_element.click()
 
             # TODO This wait is a workaround until Marionette can correctly interpret the displayed state
             self.wait_for_condition(lambda m: m.execute_script("return window.wrappedJSObject.Browser.currentScreen;") == 'page-screen')

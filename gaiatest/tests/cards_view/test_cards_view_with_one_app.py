@@ -64,17 +64,14 @@ class TestCardsView(GaiaTestCase):
         self._hold_home_button()
         self.wait_for_element_displayed(*self._cards_view_locator)
 
-        self.assertFalse(clock_frame.is_displayed(),
-            "Clock frame expected to be not displayed but was")
+        self.assertFalse(clock_frame.is_displayed(), "Clock frame expected to be not displayed but was")
 
         # launch the app from the cards view
-        app_card = self.marionette.find_element(*self._app_card_locator)
-        self.marionette.tap(app_card)
+        self.marionette.find_element(*self._app_card_locator).tap()
 
         self.wait_for_element_not_displayed(*self._app_card_locator)
 
-        self.assertTrue(clock_frame.is_displayed(),
-            "Clock frame was expected to be displayed but was not")
+        self.assertTrue(clock_frame.is_displayed(), "Clock frame was expected to be displayed but was not")
 
     def test_kill_app_from_cards_view(self):
         # https://moztrap.mozilla.org/manage/case/1917/
@@ -87,8 +84,7 @@ class TestCardsView(GaiaTestCase):
         self.wait_for_element_displayed(*self._cards_view_locator)
 
         # Find the close icon for the current app
-        close_button = self.marionette.find_element(*self._close_button_locator)
-        self.marionette.tap(close_button)
+        self.marionette.find_element(*self._close_button_locator).tap()
 
         self.marionette.switch_to_frame()
 
@@ -98,8 +94,7 @@ class TestCardsView(GaiaTestCase):
 
         # If we successfully killed the app, we should no longer find the app
         # card inside cards view.
-        self.assertRaises(NoSuchElementException, self.marionette.find_element,
-                *self._app_card_locator)
+        self.assertRaises(NoSuchElementException, self.marionette.find_element, *self._app_card_locator)
 
     def _hold_home_button(self):
         self.marionette.execute_script("window.wrappedJSObject.dispatchEvent(new Event('holdhome'));")

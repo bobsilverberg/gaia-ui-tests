@@ -24,8 +24,7 @@ class TestLaunchApp(GaiaTestCase):
 
         # click yes on the installation dialog and wait for icon displayed
         self.wait_for_element_displayed(*self._yes_button_locator)
-        yes = self.marionette.find_element(*self._yes_button_locator)
-        self.marionette.tap(yes)
+        self.marionette.find_element(*self._yes_button_locator).tap()
 
         self.marionette.switch_to_frame(self.homescreen.frame)
 
@@ -43,8 +42,7 @@ class TestLaunchApp(GaiaTestCase):
             self._go_to_next_page()
             if icon.is_displayed():
                 break
-
-        self.marionette.tap(icon)
+        icon.tap()
         self.marionette.switch_to_frame()
         iframe = self.marionette.find_element(*self._app_locator)
         self.marionette.switch_to_frame(iframe)

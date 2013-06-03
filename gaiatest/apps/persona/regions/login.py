@@ -28,18 +28,20 @@ class Login(Base):
 
     def switch_to_persona_frame(self):
         self.wait_for_element_present(*self._persona_frame_locator)
-        persona_iframe = self.marionette.find_element(*self._persona_frame_locator)
-        self.marionette.switch_to_frame(persona_iframe)
+        self.frame = self.marionette.find_element(*self._persona_frame_locator)
+        self.marionette.switch_to_frame(self.frame)
 
         self.wait_for_element_not_present(*self._body_loading_locator)
 
     def type_email(self, value):
         email_field = self.marionette.find_element(*self._email_input_locator)
         email_field.send_keys(value)
+        self.dismiss_keyboard()
 
     def type_password(self, value):
         password_field = self.marionette.find_element(*self._password_input_locator)
         password_field.send_keys(value)
+        self.dismiss_keyboard()
 
     def type_create_password(self, value):
         password_field = self.marionette.find_element(*self._create_password_locator)

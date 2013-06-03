@@ -18,8 +18,9 @@ class TestPersonaCookie(GaiaTestCase):
         self.connect_to_network()
 
         # Generate unverified PersonaTestUser account
-        self.user = PersonaTestUser().create_user(verified=True,
-            env={"browserid": "firefoxos.persona.org", "verifier": "firefoxos.123done.org"})
+        self.user = PersonaTestUser().create_user(
+            verified=True, env={"browserid": "firefoxos.persona.org", "verifier": "firefoxos.123done.org"}
+        )
 
     def test_persona_cookie(self):
         """
@@ -33,7 +34,7 @@ class TestPersonaCookie(GaiaTestCase):
         browser.go_to_url('http://firefoxos.123done.org')
 
         browser.switch_to_content()
-        self.wait_for_element_displayed(*self._logged_out_button_locator)
+        self.wait_for_element_displayed(*self._logged_out_button_locator, timeout=120)
 
         login_button = self.marionette.find_element(*self._logged_out_button_locator)
         login_button.click()

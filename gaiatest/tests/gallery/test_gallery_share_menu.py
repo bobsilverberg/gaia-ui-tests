@@ -30,7 +30,7 @@ class TestGalleryShareMenu(GaiaTestCase):
 
         first_gallery_item = self.marionette.find_elements(*self._gallery_items_locator)[0]
 
-        self.marionette.tap(first_gallery_item)
+        first_gallery_item.tap()
         self.wait_for_element_displayed(*self._current_image_locator)
 
         current_image = self.marionette.find_element(*self._current_image_locator)
@@ -40,8 +40,7 @@ class TestGalleryShareMenu(GaiaTestCase):
         self.assertTrue(photos_toolbar.is_displayed())
 
         # click on share button and check the element is correct
-        share_button = self.marionette.find_element(*self._share_button_locator)
-        self.marionette.tap(share_button)
+        self.marionette.find_element(*self._share_button_locator).tap()
 
         # switch to home frame and check the result
         self.marionette.switch_to_frame()
@@ -53,14 +52,12 @@ class TestGalleryShareMenu(GaiaTestCase):
 
         self.assertGreater(len(share_with_list), 0)
 
-        cancel_button = self.marionette.find_element(*self._cancel_button_locator)
-        self.marionette.tap(cancel_button)
+        self.marionette.find_element(*self._cancel_button_locator).tap()
 
         self.marionette.switch_to_frame(self.app.frame_id)
 
         self.wait_for_element_displayed(*self._back_button_locator)
-        back_button = self.marionette.find_element(*self._back_button_locator)
-        self.marionette.tap(back_button)
+        self.marionette.find_element(*self._back_button_locator).tap()
 
         self.wait_for_element_displayed(*self._gallery_items_locator)
         first_gallery_item = self.marionette.find_elements(*self._gallery_items_locator)[0]

@@ -39,7 +39,7 @@ class CallScreen(Phone):
 
     def tap_hang_up(self):
         hang_up = self.marionette.find_element(*self._hangup_bar_locator)
-        self.marionette.tap(hang_up)
+        hang_up.tap()
 
     def hang_up(self):
         self.tap_hang_up()

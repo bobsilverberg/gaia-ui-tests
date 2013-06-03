@@ -8,15 +8,20 @@ from gaiatest import GaiaTestCase
 class TestResources(GaiaTestCase):
 
     filename = 'IMG_0001.jpg'
+    destination = 'DCIM/100MZLLA'
 
     def test_push_resource(self):
-        self.push_resource(self.filename)
-        self.assertTrue(self.filename in self.data_layer.media_files)
+        self.push_resource('IMG_0001.jpg', destination=self.destination)
+        # A fully qualified path is returned from the api
+        remote_filepath = '/'.join(['/sdcard', self.destination, self.filename])
+        self.assertTrue(remote_filepath in self.data_layer.media_files)
 
     def test_push_multiple_resources(self):
         count = 5
-        self.push_resource(self.filename, count)
+        self.push_resource(self.filename, count, destination=self.destination)
 
         for i in range(1, count + 1):
             remote_filename = '_%s.'.join(iter(self.filename.split('.'))) % i
-            self.assertTrue(remote_filename in self.data_layer.media_files)
+            # A fully qualified path is returned from the api
+            remote_filepath = '/'.join(['/sdcard', self.destination, remote_filename])
+            self.assertTrue(remote_filepath in self.data_layer.media_files)

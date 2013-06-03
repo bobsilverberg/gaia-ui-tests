@@ -13,7 +13,7 @@ class TestContacts(GaiaTestCase):
     _sms_app_iframe_locator = ('css selector', 'iframe[src^="app://sms"][src$="index.html"]')
 
     #SMS app locators
-    _sms_app_header_locator = ('id', 'messages-header-text')
+    _recipients_list_locator = ('css selector', '#messages-recipients-list span.recipient')
     _contact_carrier_locator = ('id', 'contact-carrier')
 
     def setUp(self):
@@ -42,10 +42,17 @@ class TestContacts(GaiaTestCase):
         self.wait_for_condition(
             lambda m: m.find_element(*self._contact_carrier_locator).text != "Carrier unknown")
 
-        header_element = self.marionette.find_element(*self._sms_app_header_locator)
         expected_name = self.contact['givenName'] + " " + self.contact['familyName']
         expected_tel = self.contact['tel']['value']
 
-        self.assertEqual(header_element.text, expected_name)
-        self.assertEqual(header_element.get_attribute('data-phone-number'),
+        recipients_list = self.marionette.find_elements(*self._recipients_list_locator)
+        # Check that there are two recipients listed
+        # One is from contacts app and one is the manual entry option
+        self.assertEqual(len(recipients_list), 2)
+
+        # Now check the first listed is from contacts app
+        # Name and phone number have been passed in correctly
+        first_recipient = recipients_list[0]
+        self.assertEqual(first_recipient.text, expected_name)
+        self.assertEqual(first_recipient.get_attribute('data-number'),
                          expected_tel)

@@ -11,21 +11,19 @@ class TestSms(GaiaTestCase):
     # Summary page
     _summary_header_locator = ('xpath', "//h1[text()='Messages']")
     _create_new_message_locator = ('id', 'icon-add')
-    _unread_message_locator = ('css selector', "#threads-container li a[href^='#num=']")
 
     # Message composition
-    _receiver_input_locator = ('css selector', '#messages-recipients-container span.recipient')
+    _recipients_list_locator = ('id', 'messages-recipients-list')
+    _receiver_input_locator = ('css selector', '#messages-recipients-list span.recipient')
     _message_field_locator = ('id', 'messages-input')
     _send_message_button_locator = ('id', 'messages-send-button')
-    _back_header_link_locator = ('xpath', '//header/a[1]')
     _message_sending_spinner_locator = (
         'css selector',
         "img[src='style/images/spinningwheel_small_animation.gif']")
 
     # Conversation view
-    _all_messages_locator = ('css selector', 'li.bubble')
-    _received_message_content_locator = ('xpath', "//li[@class='bubble'][a[@class='received']]")
-    _unread_icon_locator = ('css selector', 'aside.icon-unread')
+    _all_messages_locator = ('css selector', '#messages-container li.message')
+    _received_message_content_locator = ('css selector', "#messages-container li.message.received")
 
     def test_sms_send(self):
         """
@@ -51,36 +49,24 @@ class TestSms(GaiaTestCase):
 
         # click new message
         create_new_message = self.marionette.find_element(*self._create_new_message_locator)
-        self.marionette.tap(create_new_message)
+        create_new_message.tap()
 
-        self.wait_for_element_displayed(*self._receiver_input_locator)
+        self.wait_for_element_displayed(*self._recipients_list_locator)
+        # First tap on the section to make the field active
+        self.marionette.find_element(*self._recipients_list_locator).tap()
+
         contact_field = self.marionette.find_element(*self._receiver_input_locator)
         contact_field.send_keys(self.testvars['carrier']['phone_number'])
 
         message_field = self.marionette.find_element(*self._message_field_locator)
-        message_field.send_keys(_text_message_content)
         # change the focus to the message field to enable the send button
-        # TODO: Switch to tap() when bug #869688 is fixed
-        message_field.click()
+        message_field.tap()
+        message_field.send_keys(_text_message_content)
 
         #click send
         send_message_button = self.marionette.find_element(*self._send_message_button_locator)
-        self.marionette.tap(send_message_button)
+        send_message_button.tap()
         self.wait_for_element_not_present(*self._message_sending_spinner_locator, timeout=120)
-
-        # make sure the message was actually sent
-        self.wait_for_element_displayed(*self._received_message_content_locator)
-
-        # go back
-        back_header_button = self.marionette.find_element(*self._back_header_link_locator)
-        self.marionette.tap(back_header_button)
-
-        # now wait for the return message to arrive.
-        self.wait_for_element_displayed(*self._unread_message_locator, timeout=180)
-
-        # go into the new message
-        unread_message = self.marionette.find_element(*self._unread_message_locator)
-        self.marionette.tap(unread_message)
 
         self.wait_for_element_displayed(*self._received_message_content_locator)
         # get the most recent listed and most recent received text message

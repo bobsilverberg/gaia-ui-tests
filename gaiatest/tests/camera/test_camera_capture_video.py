@@ -32,11 +32,11 @@ class TestCamera(GaiaTestCase):
 
         switch_source_button = self.marionette.find_element(*self._switch_source_button_locator)
 
-        self.marionette.tap(switch_source_button)
+        switch_source_button.tap()
         self.wait_for_element_present(*self._capture_button_enabled_locator)
 
         capture_button = self.marionette.find_element(*self._capture_button_locator)
-        self.marionette.tap(capture_button)
+        capture_button.tap()
 
         self.wait_for_element_present(*self._video_capturing_locator)
 
@@ -45,7 +45,7 @@ class TestCamera(GaiaTestCase):
             *self._video_timer_locator).text == '00:03')
 
         # Stop recording
-        self.marionette.tap(capture_button)
+        capture_button.tap()
         self.wait_for_element_not_displayed(*self._video_timer_locator)
 
         # Wait for image to be added in to filmstrip

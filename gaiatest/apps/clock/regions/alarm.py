@@ -40,8 +40,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._repeat_menu_locator).text
 
     def select_repeat(self, value):
-        # TODO: Switch to el.tap() when bug #875474  gets fixed
-        self.marionette.tap(self.marionette.find_element(*self._repeat_menu_locator))
+        self.marionette.find_element(*self._repeat_menu_locator).tap()
         self.select(value)
 
     @property
@@ -49,8 +48,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._snooze_menu_locator).text
 
     def select_snooze(self, value):
-        # TODO: Switch to el.tap() when bug #875474  gets fixed
-        self.marionette.tap(self.marionette.find_element(*self._snooze_menu_locator))
+        self.marionette.find_element(*self._snooze_menu_locator).tap()
         self.select(value)
 
     @property
@@ -58,8 +56,7 @@ class NewAlarm(Clock):
         return self.marionette.find_element(*self._sound_menu_locator).text
 
     def select_sound(self, value):
-        # TODO: Switch to el.tap() when bug #875474  gets fixed
-        self.marionette.tap(self.marionette.find_element(*self._sound_menu_locator))
+        self.marionette.find_element(*self._sound_menu_locator).tap()
         self.select(value)
 
     def wait_for_picker_to_be_visible(self):

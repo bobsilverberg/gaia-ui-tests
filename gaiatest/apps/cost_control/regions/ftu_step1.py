@@ -17,5 +17,5 @@ class FTUStep1(Base):
 
     def tap_next(self):
         self.wait_for_element_displayed(*self._next_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._next_button_locator))
+        self.marionette.find_element(*self._next_button_locator).tap()
         return FTUStep2(self.marionette)

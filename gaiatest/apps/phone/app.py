@@ -39,12 +39,12 @@ class Phone(Base):
 
     def tap_call_log_toolbar_button(self):
         self.wait_for_element_displayed(*self._call_log_toolbar_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._call_log_toolbar_button_locator))
+        self.marionette.find_element(*self._call_log_toolbar_button_locator).tap()
         return self.call_log
 
     def tap_keypad_toolbar_button(self):
         self.wait_for_element_displayed(*self._keypad_toolbar_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._keypad_toolbar_button_locator))
+        self.marionette.find_element(*self._keypad_toolbar_button_locator).tap()
         return self.keypad
 
     def make_call_and_hang_up(self, phone_number):

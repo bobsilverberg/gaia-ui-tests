@@ -58,14 +58,14 @@ class CostControl(Base):
 
     def tap_settings(self):
         self.wait_for_element_displayed(*self._settings_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._settings_button_locator))
+        self.marionette.find_element(*self._settings_button_locator).tap()
         from gaiatest.apps.cost_control.regions.settings import Settings
         return Settings(self.marionette)
 
     def toggle_mobile_data_tracking(self, value):
         if self.is_mobile_data_tracking_on is not value:
-            self.marionette.tap(self.marionette.find_element(*self._mobile_data_label_locator))
+            self.marionette.find_element(*self._mobile_data_label_locator).tap()
 
     def toggle_wifi_data_tracking(self, value):
         if self.is_wifi_data_tracking_on is not value:
-            self.marionette.tap(self.marionette.find_element(*self._wifi_data_label_locator))
+            self.marionette.find_element(*self._wifi_data_label_locator).tap()

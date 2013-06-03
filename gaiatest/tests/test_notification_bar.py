@@ -19,6 +19,7 @@ class TestNotificationBar(GaiaTestCase):
     _notification_toaster_locator = ('id', 'notification-toaster')
 
     # expanded status bar
+    _notification_container_locator = ('id', 'desktop-notifications-container')
     _notification_clear_locator = ('id', 'notification-clear')
     _notification_body_in_container_locator = ('xpath', '//div[@id="desktop-notifications-container"]/div[@class="notification"]/div[@class="detail"]')
     _notifications_in_container_locator = ('css selector', 'div#desktop-notifications-container > div.notification')
@@ -46,6 +47,7 @@ class TestNotificationBar(GaiaTestCase):
         # Expand the notification bar
         self.wait_for_element_displayed(*self._statusbar_notification_locator)
         self.marionette.execute_script("window.wrappedJSObject.UtilityTray.show()")
+        self.wait_for_condition(lambda m: m.find_element(*self._notification_container_locator).location['y'] == 50)
 
         # Assert there is one notification is listed in notifications-container
         notifications_in_container = self.marionette.find_elements(*self._notifications_in_container_locator)
@@ -56,7 +58,7 @@ class TestNotificationBar(GaiaTestCase):
 
         # Clear the notification by "Clear all"
         notification_clear = self.marionette.find_element(*self._notification_clear_locator)
-        self.marionette.tap(notification_clear)
+        notification_clear.tap()
 
         # Assert there is no notification is listed in notifications-container
         time.sleep(1)

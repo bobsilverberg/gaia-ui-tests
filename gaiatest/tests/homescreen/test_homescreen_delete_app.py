@@ -36,8 +36,7 @@ class TestDeleteApp(GaiaTestCase):
 
         # click YES on the installation dialog and wait for icon displayed
         self.wait_for_element_displayed(*self._yes_button_locator)
-        yes = self.marionette.find_element(*self._yes_button_locator)
-        self.marionette.tap(yes)
+        self.marionette.find_element(*self._yes_button_locator).tap()
         self.APP_INSTALLED = True
 
         # wait for the app to be installed and the notification banner to be available
@@ -64,13 +63,12 @@ class TestDeleteApp(GaiaTestCase):
             release(). \
             perform()
 
-        # delete the app
-        delete_button = app_icon.find_element(*self._delete_app_locator)
-        self.marionette.tap(delete_button)
+        # Tap on the (x) to start delete process
+        app_icon.find_element(*self._delete_app_locator).tap()
 
+        # Tap on the confirm delete button
         self.wait_for_element_displayed(*self._confirm_delete_locator)
-        delete = self.marionette.find_element(*self._confirm_delete_locator)
-        self.marionette.tap(delete)
+        self.marionette.find_element(*self._confirm_delete_locator).tap()
         self.APP_INSTALLED = False
 
         self.wait_for_element_not_present(*self._icon_locator)

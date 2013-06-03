@@ -2,6 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import os
+import sys
 import textwrap
 import time
 
@@ -29,7 +31,7 @@ class GaiaTestRunner(MarionetteTestRunner):
         MarionetteTestRunner.__init__(self, **kwargs)
 
         width = 80
-        if not self.testvars.get('acknowledged_risks') is True:
+        if not (self.testvars.get('acknowledged_risks') is True or os.environ.get('GAIATEST_ACKNOWLEDGED_RISKS')):
             url = 'https://developer.mozilla.org/en-US/docs/Gaia_Test_Runner#Risks'
             heading = 'Acknowledge risks'
             message = 'These tests are destructive and will remove data from the target Firefox OS instance as well ' \
@@ -39,8 +41,8 @@ class GaiaTestRunner(MarionetteTestRunner):
             print '\n'.join(textwrap.wrap(message, width))
             print url
             print '*' * width + '\n'
-            exit()
-        if not self.testvars.get('skip_warning') is True:
+            sys.exit(1)
+        if not (self.testvars.get('skip_warning') is True or os.environ.get('GAIATEST_SKIP_WARNING')):
             delay = 30
             heading = 'Warning'
             message = 'You are about to run destructive tests against a Firefox OS instance. These tests ' \
@@ -57,7 +59,7 @@ class GaiaTestRunner(MarionetteTestRunner):
                 time.sleep(delay)
             except KeyboardInterrupt:
                 print '\nTest run aborted by user.'
-                exit()
+                sys.exit(1)
             print 'Continuing with test run...\n'
 
     def register_handlers(self):

@@ -39,8 +39,7 @@ class Contacts(Base):
         return NewContact(self.marionette)
 
     def tap_settings(self):
-        # TODO: Switch to el.tap() when bug #875741 gets fixed
-        self.marionette.find_element(*self._settings_button_locator).click()
+        self.marionette.find_element(*self._settings_button_locator).tap()
         from gaiatest.apps.contacts.regions.settings_form import SettingsForm
         return SettingsForm(self.marionette)
 

@@ -49,7 +49,7 @@ class TestEverythingMeInstallApp(GaiaTestCase):
         self.assertGreater(len(shortcuts), 0, 'No shortcut categories found')
 
         # Tap on the first category of shortcuts
-        self.marionette.tap(shortcuts[0])
+        shortcuts[0].tap()
 
         self.wait_for_element_displayed(*self._apps_icon_locator)
 
@@ -68,8 +68,7 @@ class TestEverythingMeInstallApp(GaiaTestCase):
             modal_dialog_message.find('to Home Screen?')
         ].strip()  # TODO remove hack after Bug 845828 lands in V1-train
 
-        modal_dialog_ok_button = self.marionette.find_element(*self._modal_dialog_ok_locator)
-        self.marionette.tap(modal_dialog_ok_button)
+        self.marionette.find_element(*self._modal_dialog_ok_locator).tap()
 
         # return to home screen
         self.marionette.execute_script("window.wrappedJSObject.dispatchEvent(new Event('home'));")

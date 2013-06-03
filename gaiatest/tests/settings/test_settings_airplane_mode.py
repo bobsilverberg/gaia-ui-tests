@@ -22,7 +22,7 @@ class TestAirplaneMode(GaiaTestCase):
         self.wait_for_element_displayed(*self._airplane_switch_locator)
 
         # Switch on Airplane mode
-        self.marionette.tap(self.marionette.find_element(*self._airplane_switch_locator))
+        self.marionette.find_element(*self._airplane_switch_locator).tap()
 
         # wait for Cell Data to be disabled, this takes the longest when airplane mode is switched on
         self.wait_for_condition(lambda s: 'SIM card not ready' in self.marionette.find_element(*self._data_text_locator).text)
@@ -40,7 +40,7 @@ class TestAirplaneMode(GaiaTestCase):
         self.marionette.switch_to_frame(self.app.frame)
 
         # Switch off Airplane mode
-        self.marionette.tap(self.marionette.find_element(*self._airplane_switch_locator))
+        self.marionette.find_element(*self._airplane_switch_locator).tap()
 
         #wait for wifi to be connected, because this takes the longest to connect after airplane mode is switched off
         self.wait_for_condition(lambda s: 'Connected' in self.marionette.find_element(*self._wifi_text_locator).text)

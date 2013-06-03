@@ -29,7 +29,7 @@ class TestCamera(GaiaTestCase):
         # https://moztrap.mozilla.org/manage/case/1325/
 
         capture_button = self.marionette.find_element(*self._capture_button_locator)
-        self.marionette.tap(capture_button)
+        capture_button.tap()
 
         # Wait to complete focusing
         self.wait_for_condition(lambda m: m.find_element(*self._focus_ring).get_attribute('data-state') == 'focused',

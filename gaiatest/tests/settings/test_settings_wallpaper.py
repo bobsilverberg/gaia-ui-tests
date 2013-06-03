@@ -36,7 +36,7 @@ class TestWallpaper(GaiaTestCase):
 
         # TODO Bug 847946 - scrollIntoView() or scrollIntoView(true) scrolls to the element next to the giving one
         self.marionette.execute_script("arguments[0].scrollIntoView(false);", [display_item])
-        self.marionette.tap(display_item)
+        display_item.tap()
 
         #  Wait for the display menu to be visible
         self.wait_for_element_displayed(*self._visible_display_menu_locator)
@@ -49,14 +49,14 @@ class TestWallpaper(GaiaTestCase):
         self._default_wallpaper_src = wallpaper_preview.get_attribute('src')
 
         # Send the pick event to system
-        self.marionette.tap(wallpaper_preview)
+        wallpaper_preview.tap()
 
         # switch to the system app
         self.marionette.switch_to_frame()
 
         # choose the source as wallpaper app
         self.wait_for_element_displayed(*self._wallpaper_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._wallpaper_button_locator))
+        self.marionette.find_element(*self._wallpaper_button_locator).tap()
 
         # switch to the wallpaper app
         self.wait_for_element_displayed(*self._wallpaper_frame_locator)
@@ -66,7 +66,7 @@ class TestWallpaper(GaiaTestCase):
         self.wait_for_element_displayed(*self._stock_wallpapers_locator)
         stock_wallpapers = self.marionette.find_elements(*self._stock_wallpapers_locator)
         self.assertGreater(len(stock_wallpapers), 0, 'no stock wallpapers found')
-        self.marionette.tap(stock_wallpapers[3])
+        (stock_wallpapers[3]).tap()
 
         # switch to the system app
         self.marionette.switch_to_frame()

@@ -16,6 +16,7 @@ class TestCameraMultipleShots(GaiaTestCase):
     _camera_button_locator = ('id', 'camera-button')
     _image_preview_locator = ('css selector', '#media-frame > img')
     _view_finder_locator = ('id', 'viewfinder')
+    _body_locator = ('tag name', 'body')
 
     def setUp(self):
 
@@ -45,28 +46,30 @@ class TestCameraMultipleShots(GaiaTestCase):
     def preview_image(self, thumbnail):
 
         # Tap the view-finder, wait for the film-strip to appear
-        view_finder = self.marionette.find_element(*self._view_finder_locator)
-        self.marionette.tap(view_finder)
+        # The event is on the id=viewFinder but marionette won't let us tap that
+        body = self.marionette.find_element(*self._body_locator)
+        body.tap()
+
         self.wait_for_element_displayed(*self._film_strip_image_locator)
 
         # Check that there are available thumbnails to select
         images = self.marionette.find_elements(*self._film_strip_image_locator)
 
         self.assertGreater(len(images), 0, 'No images found')
-        self.marionette.tap(images[thumbnail])
+        images[thumbnail].tap()
 
         # Wait for image preview
         self.wait_for_element_displayed(*self._image_preview_locator)
 
         # Switch back to the camera
         camera_button = self.marionette.find_element(*self._camera_button_locator)
-        self.marionette.tap(camera_button)
+        camera_button.tap()
 
     def take_photo(self):
 
         # Tap the capture button
         capture_button = self.marionette.find_element(*self._capture_button_locator)
-        self.marionette.tap(capture_button)
+        capture_button.tap()
 
         # Wait to complete focusing
         self.wait_for_condition(lambda m: m.find_element(*self._focus_ring_locator).get_attribute('data-state') == 'focused')

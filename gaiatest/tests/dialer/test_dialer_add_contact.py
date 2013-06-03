@@ -57,8 +57,7 @@ class TestDialerAddContact(GaiaTestCase):
 
         # Click Add contact button
         self.wait_for_element_displayed(*self._add_new_contact_button_locator)
-        add_new_contact = self.marionette.find_element(*self._add_new_contact_button_locator)
-        self.marionette.tap(add_new_contact)
+        self.marionette.find_element(*self._add_new_contact_button_locator).tap()
 
         # Tap on "Create New Contact"
         self.wait_for_element_displayed(*self._create_new_contact_locator)
@@ -77,8 +76,7 @@ class TestDialerAddContact(GaiaTestCase):
         self.marionette.find_element(*self._family_name_field_locator).send_keys(self.contact['familyName'])
 
         # Click Done button
-        done_button = self.marionette.find_element(*self._done_button_locator)
-        self.marionette.tap(done_button)
+        self.marionette.find_element(*self._done_button_locator).tap()
 
         # Switch back to keypad-view
         self.marionette.switch_to_frame()
@@ -88,8 +86,7 @@ class TestDialerAddContact(GaiaTestCase):
         self.marionette.switch_to_frame(keypad_frame)
 
         #Go to Contact list and Verify result
-        contact_view = self.marionette.find_element(*self._contacts_view_locator)
-        self.marionette.tap(contact_view)
+        self.marionette.find_element(*self._contacts_view_locator).tap()
 
         # switch to contact frame
         self.wait_for_element_present(*self._contact_frame_locator)
@@ -102,8 +99,7 @@ class TestDialerAddContact(GaiaTestCase):
         self.assertEqual(1, len(contact_list))
 
         #  Tap on the new contact
-        contact = contact_list[0]
-        self.marionette.tap(contact)
+        contact_list[0].tap()
 
         # wait for contact details to be loaded
         self.wait_for_element_displayed(*self._call_phone_number_button_locator)

@@ -32,12 +32,15 @@ class TestChangeKeyboardLanguage(GaiaTestCase):
         # Navigate to keyboard settings
         self.wait_for_element_displayed(*self._keyboard_settings_locator)
         keyboard_setting = self.marionette.find_element(*self._keyboard_settings_locator)
-        self.marionette.tap(keyboard_setting)
+
+        # TODO bug 878017 - remove the explicit scroll once bug is fixed
+        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [keyboard_setting])
+        keyboard_setting.tap()
 
         # Select keyboard language
         self.wait_for_element_displayed(*self._select_language_locator)
         selected_language = self.marionette.find_element(*self._select_language_locator)
-        self.marionette.tap(selected_language)
+        selected_language.tap()
 
         # --Verify the keyboard layout--
         # launch the email app (follow manual test case)

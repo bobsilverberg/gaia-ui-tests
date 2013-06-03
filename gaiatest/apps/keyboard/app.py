@@ -108,7 +108,9 @@ class Keyboard(Base):
     def _tap(self, val):
         self.wait_for_element_displayed(*self._key_locator(val))
         key = self.marionette.find_element(*self._key_locator(val))
-        self.marionette.tap(key)
+        key.tap()
+        # new el.tap() timing requires a bit of a wait after tapping on a key
+        time.sleep(0.5)
 
     # This is for selecting special characters after long pressing
     # "selection" is the nth special element you want to select (n>=1)
@@ -189,9 +191,6 @@ class Keyboard(Base):
                 else:
                     assert False, 'Key %s not found on the keyboard' % val
 
-            # after tap/click space key, it might get screwed up due to timing issue. adding 0.8sec for it.
-            if ord(val) == int(self._space_key):
-                time.sleep(0.8)
         self.marionette.switch_to_frame()
 
     # Switch keyboard language
@@ -246,8 +245,8 @@ class Keyboard(Base):
 
     def tap_backspace(self):
         self._switch_to_keyboard()
-        bs = self.marionette.find_element(self._button_locator[0], self._button_locator[1] % self._backspace_key)
-        self.marionette.tap(bs)
+        backspace = self.marionette.find_element(self._button_locator[0], self._button_locator[1] % self._backspace_key)
+        backspace.tap()
         self.marionette.switch_to_frame()
 
     def tap_space(self):

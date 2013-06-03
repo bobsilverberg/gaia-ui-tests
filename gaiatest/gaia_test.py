@@ -83,6 +83,15 @@ class GaiaApps(object):
             self.switch_to_frame(app.frame_id, url)
         return app
 
+    @property
+    def displayed_app(self):
+        self.marionette.switch_to_frame()
+        result = self.marionette.execute_async_script('return GaiaApps.displayedApp();')
+        return GaiaApp(frame=result.get('frame'),
+                       src=result.get('src'),
+                       name=result.get('name'),
+                       origin=result.get('origin'))
+
     def is_app_installed(self, app_name):
         self.marionette.switch_to_frame()
         return self.marionette.execute_async_script("GaiaApps.locateWithName('%s')" % app_name)
@@ -495,7 +504,7 @@ class GaiaTestCase(MarionetteTestCase):
 
             # TODO add this to the system app object when we have one
             self.wait_for_element_displayed(*_yes_button_locator)
-            self.marionette.tap(self.marionette.find_element(*_yes_button_locator))
+            self.marionette.find_element(*_yes_button_locator).tap()
             self.wait_for_element_not_displayed(*_yes_button_locator)
 
     def connect_to_network(self):
@@ -568,7 +577,7 @@ class GaiaTestCase(MarionetteTestCase):
                 pass
         else:
             raise TimeoutException(
-                'Element %s not found before timeout' % locator)
+                'Element %s not present before timeout' % locator)
 
     def wait_for_element_not_present(self, by, locator, timeout=_default_timeout):
         timeout = float(timeout) + time.time()
@@ -585,17 +594,20 @@ class GaiaTestCase(MarionetteTestCase):
 
     def wait_for_element_displayed(self, by, locator, timeout=_default_timeout):
         timeout = float(timeout) + time.time()
-
+        e = None
         while time.time() < timeout:
             time.sleep(0.5)
             try:
                 if self.marionette.find_element(by, locator).is_displayed():
                     break
-            except (NoSuchElementException, StaleElementException):
+            except (NoSuchElementException, StaleElementException) as e:
                 pass
         else:
-            raise TimeoutException(
-                'Element %s not visible before timeout' % locator)
+            # This is an effortless way to give extra debugging information
+            if isinstance(e, NoSuchElementException):
+                raise TimeoutException('Element %s not present before timeout' % locator)
+            else:
+                raise TimeoutException('Element %s present but not displayed before timeout' % locator)
 
     def wait_for_element_not_displayed(self, by, locator, timeout=_default_timeout):
         timeout = float(timeout) + time.time()

@@ -32,7 +32,7 @@ class TestSettingsCellData(GaiaTestCase):
         # navigate to cell data settings
         self.wait_for_element_displayed(*self._cell_data_menu_item_locator)
         cell_data_menu_item = self.marionette.find_element(*self._cell_data_menu_item_locator)
-        self.marionette.tap(cell_data_menu_item)
+        cell_data_menu_item.tap()
 
         # verify that a carrier is displayed
         self.wait_for_element_displayed(*self._carrier_name_locator)
@@ -44,7 +44,7 @@ class TestSettingsCellData(GaiaTestCase):
 
         # we have to tap on the label rather than the input
         enabled_label = self.marionette.find_element(*self._cell_data_enabled_label_locator)
-        self.marionette.tap(enabled_label)
+        enabled_label.tap()
 
         # Sleep a little after the tap. It's cleaner than an if/waiting/except block
         time.sleep(1)
@@ -55,7 +55,7 @@ class TestSettingsCellData(GaiaTestCase):
             self.assertFalse(enabled_checkbox.get_attribute('checked'))
             self.assertFalse(self.data_layer.get_setting('ril.data.enabled'), "Cell data was enabled before responding to the prompt")
             turn_on_prompt_button = self.marionette.find_element(*self._cell_data_prompt_turn_on_button_locator)
-            self.marionette.tap(turn_on_prompt_button)
+            turn_on_prompt_button.tap()
 
         self.wait_for_condition(
             lambda m: m.find_element(*self._cell_data_enabled_input_locator).get_attribute('checked') == 'true'

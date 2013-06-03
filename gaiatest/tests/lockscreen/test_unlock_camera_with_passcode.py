@@ -3,6 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
+from marionette.marionette import Actions
 
 
 class TestCameraUnlockWithPasscode(GaiaTestCase):
@@ -48,7 +49,7 @@ class TestCameraUnlockWithPasscode(GaiaTestCase):
         self.assertFalse(self.is_element_displayed(*self._gallery_button_locator))
 
         switch_source_button = self.marionette.find_element(*self._switch_source_button_locator)
-        self.marionette.tap(switch_source_button)
+        switch_source_button.tap()
 
         self.wait_for_element_present(*self._capture_button_locator)
 
@@ -65,7 +66,7 @@ class TestCameraUnlockWithPasscode(GaiaTestCase):
         end_animation_position = lockscreen_area.size['height'] - unlock_handle.size['height']
 
         # Flick from unlock handle to (0, -end_animation_position) over 800ms duration
-        self.marionette.flick(unlock_handle, unlock_handle_x_centre, unlock_handle_y_centre, 0, 0 - end_animation_position, 800)
+        Actions(self.marionette).flick(unlock_handle, unlock_handle_x_centre, unlock_handle_y_centre, 0, 0 - end_animation_position, 800).perform()
 
         # Wait for the svg to animate and handle to disappear
         # TODO add assertion that unlock buttons are visible after bug 813561 is fixed

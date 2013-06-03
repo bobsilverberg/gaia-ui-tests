@@ -34,12 +34,15 @@ class TestSettingsPasscode(GaiaTestCase):
         # navigate to phone lock settings
         self.wait_for_element_displayed(*self._phonelock_menu_item_locator)
         phonelock_menu_item = self.marionette.find_element(*self._phonelock_menu_item_locator)
-        self.marionette.tap(phonelock_menu_item)
+
+        # TODO bug 878017 - remove the explicit scroll once bug is fixed
+        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [phonelock_menu_item])
+        phonelock_menu_item.tap()
 
         # enable passcode
         self.wait_for_element_displayed(*self._phonelock_section_locator)
         passcode_enable_item = self.marionette.find_element(*self._passcode_enable_locator)
-        self.marionette.tap(passcode_enable_item)
+        passcode_enable_item.tap()
 
         # switch to keyboard, input passcode
         self.wait_for_element_displayed(*self._phoneLock_passcode_section_locator)
@@ -55,7 +58,9 @@ class TestSettingsPasscode(GaiaTestCase):
         # create passcode
         self.wait_for_element_displayed(*self._phoneLock_passcode_section_locator)
         passcode_create = self.marionette.find_element(*self._passcode_create_locator)
-        self.marionette.tap(passcode_create)
+
+        passcode_create.tap()
+        self.wait_for_element_displayed(*self._phonelock_section_locator)
 
         # assert
         passcode_code = self.data_layer.get_setting('lockscreen.passcode-lock.code')

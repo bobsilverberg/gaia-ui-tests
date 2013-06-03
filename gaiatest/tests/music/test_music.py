@@ -33,12 +33,11 @@ class TestMusic(GaiaTestCase):
         # https://moztrap.mozilla.org/manage/case/4031/
 
         # wait for music tiles to appear as indication of indexing
-        self.wait_for_element_displayed(*self._album_tile_locator, timeout=60)
+        self.wait_for_element_displayed(*self._album_tile_locator)
 
         # switch to albums view
         self.wait_for_element_displayed(*self._tab_albums_locator)
-        tab_albums = self.marionette.find_element(*self._tab_albums_locator)
-        self.marionette.tap(tab_albums)
+        self.marionette.find_element(*self._tab_albums_locator).tap()
 
         # wait for it to switch into list mode
         self.wait_for_element_present(*self._body_list_mode_locator)
@@ -48,14 +47,12 @@ class TestMusic(GaiaTestCase):
         self.assertGreater(len(albums), 0, 'no albums found')
 
         # select an album
-        album_list = self.marionette.find_element(*self._album_list_locator)
-        self.marionette.tap(album_list)
+        self.marionette.find_element(*self._album_list_locator).tap()
 
         # select play
         # This wait is timing out because of bug 862156
         self.wait_for_element_displayed(*self._views_sublist_controls_play_locator)
-        views_sublist_controls_play = self.marionette.find_element(*self._views_sublist_controls_play_locator)
-        self.marionette.tap(views_sublist_controls_play)
+        self.marionette.find_element(*self._views_sublist_controls_play_locator).tap()
 
         # play for a short duration
         self.wait_for_condition(
@@ -69,8 +66,7 @@ class TestMusic(GaiaTestCase):
         self.assertEqual(audiotag.get_attribute('paused'), 'false')
 
         # select stop
-        player_controls_play = self.marionette.find_element(*self._player_controls_play_locator)
-        self.marionette.tap(player_controls_play)
+        self.marionette.find_element(*self._player_controls_play_locator).tap()
 
         # wait to be sure the pause settles in
         time.sleep(2)

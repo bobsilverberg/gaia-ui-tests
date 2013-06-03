@@ -11,7 +11,7 @@ before_script:
   - sh -e /etc/init.d/xvfb start
   - sleep 10
   - echo "{\"acknowledged_risks\":true,\"skip_warning\":true}" > testvars.json
-script: gaiatest --app=b2gdesktop --binary=b2g/b2g-bin --profile=b2g/gaia/profile --testvars=testvars.json --type=b2g-antenna-bluetooth-carrier-camera-offline-sdcard-wifi-xfail --restart gaiatest/tests/manifest.ini
+script: gaiatest --app=b2gdesktop --binary=b2g/b2g-bin --profile=b2g/gaia/profile --testvars=testvars.json --type=b2g-xfail --restart gaiatest/tests/desktop_manifest.ini
 env:
   - DISPLAY=':99.0'
 notifications:

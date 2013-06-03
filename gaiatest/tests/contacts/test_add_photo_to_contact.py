@@ -53,7 +53,7 @@ class TestContacts(GaiaTestCase):
 
         # choose the source as gallery app
         self.wait_for_element_displayed(*self._gallery_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._gallery_button_locator))
+        self.marionette.find_element(*self._gallery_button_locator).tap()
 
         # switch to the gallery app
         self.wait_for_element_displayed(*self._gallery_frame_locator)
@@ -62,10 +62,10 @@ class TestContacts(GaiaTestCase):
         self.wait_for_element_displayed(*self._gallery_items_locator)
         gallery_items = self.marionette.find_elements(*self._gallery_items_locator)
         self.assertGreater(len(gallery_items), 0, 'No photos were found in the gallery.')
-        self.marionette.tap(gallery_items[0])
+        gallery_items[0].tap()
 
         self.wait_for_element_displayed(*self._gallery_crop_done_button_locator)
-        self.marionette.tap(self.marionette.find_element(*self._gallery_crop_done_button_locator))
+        self.marionette.find_element(*self._gallery_crop_done_button_locator).tap()
 
         # switch back to the contacts app
         contacts_app.launch()
