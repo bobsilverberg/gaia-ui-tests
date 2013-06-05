@@ -434,7 +434,7 @@ var GaiaDataLayer = {
     let request = sms.getMessages(filter, false);
 
     request.onsuccess = function(event) {
-      cursor = event.target.result;
+      var cursor = event.target.result;
       // Check if message was found
       if (cursor && cursor.message) {
         msgList.push(cursor.message.id);

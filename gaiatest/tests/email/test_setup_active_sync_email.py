@@ -42,6 +42,5 @@ class TestSetupActiveSync(GaiaTestCase):
         self.assertTrue(self.email.toolbar.is_edit_visible)
         self.assertTrue(self.email.toolbar.is_refresh_visible)
 
-        # check account has emails
+        # wait for sync to complete
         self.email.wait_for_emails_to_sync()
-        self.assertGreater(len(self.email.mails), 0)

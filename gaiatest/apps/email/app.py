@@ -2,6 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+import time
+from marionette.errors import TimeoutException
 from gaiatest.apps.base import Base
 from gaiatest.apps.base import PageRegion
 from gaiatest.apps.email.regions.setup import SetupEmail
@@ -13,10 +15,10 @@ class Email(Base):
 
     name = 'E-Mail'
 
-    _header_area_locator = ('css selector', '.msg-list-header.msg-nonsearch-only')
-    _email_locator = ('css selector', '.msg-header-item')
-    _syncing_locator = ('css selector', '.msg-messages-syncing > .small')
-    _manual_setup_locator = ('css selector', '.sup-manual-config-btn')
+    _header_area_locator = ('css selector', '#cardContainer .msg-list-header.msg-nonsearch-only')
+    _email_locator = ('css selector', '#cardContainer .msg-header-item')
+    _syncing_locator = ('css selector', '#cardContainer .msg-messages-syncing > .small')
+    _manual_setup_locator = ('css selector', '#cardContainer .sup-manual-config-btn')
 
     def basic_setup_email(self, name, email, password):
 
@@ -84,6 +86,18 @@ class Email(Base):
     def wait_for_header_area(self):
         self.wait_for_element_displayed(*self._header_area_locator)
 
+    def wait_for_email(self, subject, timeout=60):
+        timeout = float(timeout) + time.time()
+        while time.time() < timeout:
+            time.sleep(5)
+            self.toolbar.tap_refresh()
+            self.wait_for_emails_to_sync()
+            emails = self.mails
+            if subject in [mail.subject for mail in emails]:
+                break
+        else:
+            raise TimeoutException('Email %s not received before timeout' % subject)
+
 
 class Header(Base):
     _menu_button_locator = ('css selector', '.card.center .msg-folder-list-btn')
@@ -115,11 +129,12 @@ class Header(Base):
 
 
 class ToolBar(Base):
-    _toolbar_locator = ('css selector', '.fld-nav-toolbar')
-    _refresh_locator = ('css selector', '.msg-refresh-btn')
-    _search_locator = ('css selector', '.msg-search-btn')
-    _edit_locator = ('css selector', '.msg-edit-btn')
-    _settings_locator = ('css selector', '.fld-nav-settings-btn')
+    _toolbar_locator = ('css selector', '#cardContainer .fld-nav-toolbar')
+    _refresh_locator = ('css selector', '#cardContainer .msg-refresh-btn')
+    _search_locator = ('css selector', '#cardContainer .msg-search-btn')
+    _edit_locator = ('css selector', '#cardContainer .msg-edit-btn')
+    _settings_locator = ('css selector', '#cardContainer .fld-nav-settings-btn')
+
 
     def tap_refresh(self):
         self.marionette.find_element(*self._refresh_locator).tap()
@@ -160,6 +175,9 @@ class Message(PageRegion):
     @property
     def subject(self):
         return self.root_element.find_element(*self._subject_locator).text
+
+    def scroll_to_message(self):
+        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [self.root_element])
 
     def tap_subject(self):
         el = self.root_element.find_element(*self._subject_locator)

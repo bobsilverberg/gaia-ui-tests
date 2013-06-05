@@ -40,7 +40,7 @@ class FmRadio(Base):
         self.marionette.find_element(*self._power_button_locator).tap()
 
     def wait_for_radio_off(self):
-        self.wait_for_condition(lambda m:self.is_power_button_on is False )
+        self.wait_for_condition(lambda m: self.is_power_button_on is False)
 
     def tap_add_favorite(self):
         current_favorite_channel_count = len(self.favorite_channels)

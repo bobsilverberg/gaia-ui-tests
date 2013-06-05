@@ -66,8 +66,7 @@ class FilterResults(Base):
         self.wait_for_element_displayed(*self._apply_locator)
 
     def by_price(self, filter_name):
-        self.marionette.find_element(
-                *getattr(self, '_%s_price_filter_locator' % filter_name)).tap()
+        self.marionette.find_element(*getattr(self, '_%s_price_filter_locator' % filter_name)).tap()
 
     def tap_apply(self):
         self.marionette.find_element(*self._apply_locator).tap()

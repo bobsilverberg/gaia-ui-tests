@@ -28,19 +28,10 @@ class TestSms(GaiaTestCase):
     def test_sms_send(self):
         """
         This test sends a text message to itself. It waits for a reply message.
-        It does not yet clean up after itself but it can handle it.
         https://moztrap.mozilla.org/manage/case/1322/
         """
 
         _text_message_content = "Automated Test %s" % str(time.time())
-
-        # delete any existing SMS messages to start clean
-        self.data_layer.delete_all_sms()
-
-        # temporary workaround for bug 837029
-        # launch and then kill messags app, to clear any left-over sms msg notifications
-        self.app = self.apps.launch('Messages', False)
-        self.apps.kill(self.app)
 
         # launch the app
         self.app = self.apps.launch('Messages')

@@ -20,6 +20,9 @@ class TestSendIMAPEmail(GaiaTestCase):
         self.email.setup_IMAP_email(self.testvars['email']['IMAP'])
 
     def test_send_imap_email(self):
+        # Bug 878772 - email app doesn't show the last emails by default
+        self.email.wait_for_emails_to_sync()
+        self.email.mails[0].scroll_to_message()
 
         curr_time = repr(time.time()).replace('.', '')
         new_email = self.email.header.tap_compose()
@@ -31,9 +34,7 @@ class TestSendIMAPEmail(GaiaTestCase):
         self.email = new_email.tap_send()
 
         # wait for the email to be sent before we tap refresh
-        time.sleep(10)
-        self.email.toolbar.tap_refresh()
-        self.email.wait_for_emails_to_sync()
+        self.email.wait_for_email('test email %s' % curr_time)
 
         # assert that the email app subject is in the email list
         self.assertIn('test email %s' % curr_time, [mail.subject for mail in self.email.mails])
