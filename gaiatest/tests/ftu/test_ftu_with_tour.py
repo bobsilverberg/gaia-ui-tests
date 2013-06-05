@@ -16,6 +16,7 @@ class TestFtu(GaiaTestCase):
     _section_wifi_locator = ('id', 'wifi')
     _found_wifi_networks_locator = ('css selector', 'ul#networks-list li')
     _section_date_time_locator = ('id', 'date_and_time')
+    _section_geolocation_locator = ('id', 'geolocation')
     _section_import_contacts_locator = ('id', 'import_contacts')
     _section_ayr_locator = ('id', 'about-your-rights')
     _section_welcome_browser_locator = ('id', 'welcome_browser')
@@ -58,6 +59,9 @@ class TestFtu(GaiaTestCase):
         # Tap next
         self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_date_time_locator)
+        # Tap next
+        self.marionette.find_element(*self._next_button_locator).tap()
+        self.wait_for_element_displayed(*self._section_geolocation_locator)
         # Tap next
         self.marionette.find_element(*self._next_button_locator).tap()
         self.wait_for_element_displayed(*self._section_import_contacts_locator)
