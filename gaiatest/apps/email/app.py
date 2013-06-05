@@ -54,6 +54,23 @@ class Email(Base):
         setup.tap_continue()
         self.wait_for_header_area()
 
+    def setup_active_sync_email(self, active_sync):
+        setup = self.tap_manual_setup()
+        setup.type_name(active_sync['name'])
+
+        setup.type_email(active_sync['email'])
+        setup.type_password(active_sync['password'])
+
+        setup.select_account_type('ActiveSync')
+
+        setup.type_activesync_hostname(active_sync['active_sync_hostname'])
+        setup.type_activesync_name(active_sync['active_sync_username'])
+
+        setup.tap_next()
+        setup.wait_for_setup_complete()
+        setup.tap_continue()
+        self.wait_for_header_area()
+
     def delete_email_account(self, index):
 
         toolbar = self.header.tap_menu()

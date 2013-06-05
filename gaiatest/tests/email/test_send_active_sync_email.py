@@ -7,7 +7,7 @@ from gaiatest import GaiaTestCase
 from gaiatest.apps.email.app import Email
 
 
-class TestSendIMAPEmail(GaiaTestCase):
+class TestSendActiveSyncEmail(GaiaTestCase):
 
     def setUp(self):
         GaiaTestCase.setUp(self)
@@ -16,18 +16,15 @@ class TestSendIMAPEmail(GaiaTestCase):
         self.email = Email(self.marionette)
         self.email.launch()
 
-        # setup IMAP account
-        self.email.setup_IMAP_email(self.testvars['email']['IMAP'])
+        # setup ActiveSync account
+        self.email.setup_active_sync_email(
+            self.testvars['email']['ActiveSync'])
 
-    def test_send_imap_email(self):
-        # Bug 878772 - email app doesn't show the last emails by default
-        self.email.wait_for_emails_to_sync()
-        self.email.mails[0].scroll_to_message()
-
+    def test_send_active_sync_email(self):
         curr_time = repr(time.time()).replace('.', '')
         new_email = self.email.header.tap_compose()
 
-        new_email.type_to(self.testvars['email']['IMAP']['email'])
+        new_email.type_to(self.testvars['email']['ActiveSync']['email'])
         new_email.type_subject('test email %s' % curr_time)
         new_email.type_body('Lorem ipsum dolor sit amet %s' % curr_time)
 
@@ -37,8 +34,8 @@ class TestSendIMAPEmail(GaiaTestCase):
         self.email.wait_for_email('test email %s' % curr_time)
 
         # assert that the email app subject is in the email list
-        self.assertIn('test email %s' % curr_time,
-                      [mail.subject for mail in self.email.mails])
+        self.assertIn('test email %s' % curr_time, [
+                      mail.subject for mail in self.email.mails])
 
         read_email = self.email.mails[0].tap_subject()
 
