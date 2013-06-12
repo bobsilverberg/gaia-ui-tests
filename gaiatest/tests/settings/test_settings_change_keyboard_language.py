@@ -4,51 +4,33 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
+from gaiatest.apps.settings.app import Settings
+from gaiatest.apps.contacts.app import Contacts
 
 
 class TestChangeKeyboardLanguage(GaiaTestCase):
 
-    # Language settings locators
-    _keyboard_settings_locator = ("id", "menuItem-keyboard")
-    _select_language_locator = (
-        "xpath",
-        "//section[@id='keyboard']//li/label[input[@name='keyboard.layouts.spanish']]"
-    )
-    _select_text_field_locator = ("css selector", "input[type='text']")
+    # Test locators
     _select_keyb_frame_locator = ("css selector", "#keyboard-frame iframe")
     _language_key_locator = ("css selector", ".keyboard-row button[data-keycode='-3']")
     _special_key_locator = ("css selector", ".keyboard-row button[data-keycode='241']")
     _expected_key = u'\xf1'
 
-    def setUp(self):
-        GaiaTestCase.setUp(self)
-        # Launch the Settings app
-        self.app = self.apps.launch('Settings')
-
     def test_change_keyboard_language_settings(self):
-        # Initial the keyboard app
+        settings = Settings(self.marionette)
+        settings.launch()
+        keyboard_settings = settings.open_keyboard_settings()
+
         keyboard_app = self.keyboard
 
-        # Navigate to keyboard settings
-        self.wait_for_element_displayed(*self._keyboard_settings_locator)
-        keyboard_setting = self.marionette.find_element(*self._keyboard_settings_locator)
-        # TODO bug 878017 - remove the explicit scroll once bug is fixed
-        self.marionette.execute_script("arguments[0].scrollIntoView(false);", [keyboard_setting])
-        keyboard_setting.tap()
-
         # Select keyboard language
-        self.wait_for_element_displayed(*self._select_language_locator)
-        selected_language = self.marionette.find_element(*self._select_language_locator)
-        selected_language.tap()
+        keyboard_settings.select_language('spanish')
 
-        # --Verify the keyboard layout--
-        # launch the email app (follow manual test case)
-        self.app = self.apps.launch('email')
-
-        # Select name field
-        self.wait_for_element_displayed(*self._select_text_field_locator)
-        select_text_field = self.marionette.find_element(*self._select_text_field_locator)
-        select_text_field.click()
+        # launch the Contacts app to verify the keyboard layout
+        contacts_app = Contacts(self.marionette)
+        contacts_app.launch()
+        new_contact_form = contacts_app.tap_new_contact()
+        new_contact_form.type_comment('')
 
         # Switch to keyboard frame and switch language
         keyboard_app.switch_keyboard_language("es")

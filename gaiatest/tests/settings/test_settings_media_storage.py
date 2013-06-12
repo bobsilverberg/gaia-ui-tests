@@ -11,9 +11,9 @@ class TestSettingsMediaStorage(GaiaTestCase):
     _media_storage_locator = ('id', 'menuItem-mediaStorage')
 
     # Media storage locators
-    _music_space_locator = ('css selector', '#music-space > a > .size')
-    _pictures_space_locator = ('css selector', '#pictures-space > a > .size')
-    _movies_space_locator = ('css selector', '#videos-space > a > .size')
+    _music_space_locator = ('css selector', '.color-music > a > .size')
+    _pictures_space_locator = ('css selector', '.color-pictures > a > .size')
+    _movies_space_locator = ('css selector', '.color-videos > a > .size')
 
     def test_settings_media_storage(self):
 
@@ -60,6 +60,7 @@ class TestSettingsMediaStorage(GaiaTestCase):
 
         # Tap on 'Media storage'
         media_storage_item.tap()
+        self.wait_for_condition(lambda m: media_storage_item.location['x'] + media_storage_item.size['width'] == 0)
 
         self.wait_for_element_displayed(*self._music_space_locator)
         self.wait_for_element_displayed(*self._pictures_space_locator)

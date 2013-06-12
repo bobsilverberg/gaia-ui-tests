@@ -13,6 +13,7 @@ class TestWallpaper(GaiaTestCase):
     # display menu
     _visible_display_menu_locator = ('css selector', '#display.current')
     _wallpaper_preview_locator = ('id', 'wallpaper-preview')
+    _wallpaper_pick_locator = ('id', 'wallpaper')
     _wallpaper_button_locator = ('css selector', "a[data-value='0']")
     _wallpaper_title_locator = ('css selector', "h1[data-l10n-id='select-wallpaper']")
     _stock_wallpapers_locator = ('css selector', "div[class='wallpaper']")
@@ -37,6 +38,7 @@ class TestWallpaper(GaiaTestCase):
         # TODO Bug 847946 - scrollIntoView() or scrollIntoView(true) scrolls to the element next to the giving one
         self.marionette.execute_script("arguments[0].scrollIntoView(false);", [display_item])
         display_item.tap()
+        self.wait_for_condition(lambda m: display_item.location['x'] + display_item.size['width'] == 0)
 
         #  Wait for the display menu to be visible
         self.wait_for_element_displayed(*self._visible_display_menu_locator)
@@ -49,7 +51,7 @@ class TestWallpaper(GaiaTestCase):
         self._default_wallpaper_src = wallpaper_preview.get_attribute('src')
 
         # Send the pick event to system
-        wallpaper_preview.tap()
+        self.marionette.find_element(*self._wallpaper_pick_locator).tap()
 
         # switch to the system app
         self.marionette.switch_to_frame()

@@ -21,8 +21,6 @@ class TestSettingsPasscode(GaiaTestCase):
 
         GaiaTestCase.setUp(self)
 
-        # Enable lock screen
-        self.data_layer.set_setting('lockscreen.enabled', True)
         # launch the Settings app
         self.app = self.apps.launch('Settings')
 
@@ -35,14 +33,15 @@ class TestSettingsPasscode(GaiaTestCase):
         # navigate to phone lock settings
         self.wait_for_element_displayed(*self._phonelock_menu_item_locator)
         phonelock_menu_item = self.marionette.find_element(*self._phonelock_menu_item_locator)
+
         # TODO bug 878017 - remove the explicit scroll once bug is fixed
         self.marionette.execute_script("arguments[0].scrollIntoView(false);", [phonelock_menu_item])
         phonelock_menu_item.tap()
+        self.wait_for_condition(lambda m: phonelock_menu_item.location['x'] + phonelock_menu_item.size['width'] == 0)
 
         # enable passcode
         self.wait_for_element_displayed(*self._phonelock_section_locator)
         passcode_enable_item = self.marionette.find_element(*self._passcode_enable_locator)
-        self.wait_for_condition(lambda m: passcode_enable_item.location['x'] == 0)
         passcode_enable_item.tap()
 
         # switch to keyboard, input passcode
@@ -67,12 +66,3 @@ class TestSettingsPasscode(GaiaTestCase):
         passcode_enabled = self.data_layer.get_setting('lockscreen.passcode-lock.enabled')
         self.assertEqual(passcode_code, "".join(self._input_passcode), 'Passcode is "%s", not "%s"' % (passcode_code, "".join(self._input_passcode)))
         self.assertEqual(passcode_enabled, True, 'Passcode is not enabled.')
-
-    def tearDown(self):
-        # switch to settings frame
-        self.marionette.switch_to_frame()
-        self.marionette.switch_to_frame(self.app.frame)
-
-        # disable passcode
-        self.data_layer.set_setting('lockscreen.passcode-lock.code', '1111')
-        self.data_layer.set_setting('lockscreen.passcode-lock.enabled', False)

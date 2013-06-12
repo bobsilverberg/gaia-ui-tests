@@ -3,22 +3,10 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 from gaiatest import GaiaTestCase
+from gaiatest.apps.settings.app import Settings
 
 
 class TestBluetoothSettings(GaiaTestCase):
-
-    # Bluetooth settings locators
-    _bluetooth_settings_locator = ('id', 'menuItem-bluetooth')
-    _bluetooth_region_visible_locator = ('css selector', '#bluetooth.current')
-    _bluetooth_checkbox_locator = ('css selector', '#bluetooth-status input')
-    _bluetooth_label_locator = ('css selector', '#bluetooth-status span')
-
-    def setUp(self):
-
-        GaiaTestCase.setUp(self)
-
-        # Launch the Settings app
-        self.app = self.apps.launch('Settings')
 
     def test_toggle_bluetooth_settings(self):
         """ Toggle Bluetooth via Settings - Networks & Connectivity
@@ -26,20 +14,12 @@ class TestBluetoothSettings(GaiaTestCase):
         https://moztrap.mozilla.org/manage/case/3346/
 
         """
+        settings = Settings(self.marionette)
+        settings.launch()
+        bluetooth_settings = settings.open_bluetooth_settings()
 
-        # Navigate to Bluetooth settings
-        self.wait_for_element_displayed(*self._bluetooth_settings_locator)
-        bluetooth_menu_item = self.marionette.find_element(*self._bluetooth_settings_locator)
-        bluetooth_menu_item.tap()
-
-        checkbox = self.marionette.find_element(*self._bluetooth_checkbox_locator)
-        self.wait_for_condition(lambda m: checkbox.location['x'] == 0)
-        self.assertIsNone(checkbox.get_attribute('checked'))
-
-        # Enable Bluetooth
-        label = self.marionette.find_element(*self._bluetooth_label_locator)
-        label.tap()
-        self.wait_for_condition(lambda m: m.find_element(*self._bluetooth_checkbox_locator).get_attribute('checked') == 'true')
+        self.assertFalse(bluetooth_settings.is_bluetooth_enabled)
+        bluetooth_settings.enable_bluetooth()
 
         self.assertTrue(self.data_layer.get_setting('bluetooth.enabled'))
 

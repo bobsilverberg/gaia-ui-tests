@@ -34,6 +34,7 @@ class TestSettingsDoNotTrack(GaiaTestCase):
         self.marionette.execute_script('arguments[0].scrollIntoView(false);',
                                        [donottrack_menu_item])
         donottrack_menu_item.tap()
+        self.wait_for_condition(lambda m: donottrack_menu_item.location['x'] + donottrack_menu_item.size['width'] == 0)
 
         # locate the Do Not Track label and checkbox
         self.wait_for_element_displayed(*self._donottrack_label_locator)
