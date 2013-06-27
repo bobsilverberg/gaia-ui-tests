@@ -20,6 +20,7 @@ class Settings(Base):
     _keyboard_menu_item_locator = ("id", "menuItem-keyboard")
     _language_menu_item_locator = ('id', 'menuItem-languageAndRegion')
     _do_not_track_menu_item_locator = ('id', 'menuItem-doNotTrack')
+    _media_storage_menu_item_locator = ('id', 'menuItem-mediaStorage')
 
     def launch(self):
         Base.launch(self)
@@ -79,6 +80,11 @@ class Settings(Base):
         from gaiatest.apps.settings.regions.do_not_track import DoNotTrack
         self._tap_menu_item(self._do_not_track_menu_item_locator)
         return DoNotTrack(self.marionette)
+
+    def open_media_storage_settings(self):
+        from gaiatest.apps.settings.regions.media_storage import MediaStorage
+        self._tap_menu_item(self._media_storage_menu_item_locator)
+        return MediaStorage(self.marionette)
 
     def _tap_menu_item(self, menu_item_locator):
         self.wait_for_element_displayed(*menu_item_locator)
