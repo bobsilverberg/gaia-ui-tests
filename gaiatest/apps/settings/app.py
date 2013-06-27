@@ -13,10 +13,13 @@ class Settings(Base):
     _data_text_locator = ('id', 'data-desc')
     _airplane_switch_locator = ('css selector', 'ul> li:nth-child(1) label')
     _wifi_text_locator = ('id', 'wifi-desc')
+    _gps_enabled_locator = ('xpath', "//input[@name='geolocation.enabled']")
+    _gps_switch_locator = ('xpath', "//input[@name='geolocation.enabled']/..")
     _cell_data_menu_item_locator = ('id', 'menuItem-cellularAndData')
     _bluetooth_menu_item_locator = ('id', 'menuItem-bluetooth')
     _keyboard_menu_item_locator = ("id", "menuItem-keyboard")
     _language_menu_item_locator = ('id', 'menuItem-languageAndRegion')
+    _do_not_track_menu_item_locator = ('id', 'menuItem-doNotTrack')
 
     def launch(self):
         Base.launch(self)
@@ -27,6 +30,18 @@ class Settings(Base):
 
     def disable_airplane_mode(self):
         self.marionette.find_element(*self._airplane_switch_locator).tap()
+
+    def enable_gps(self):
+        self.marionette.find_element(*self._gps_switch_locator).tap()
+        self.wait_for_condition(lambda m: self.is_gps_enabled)
+
+    def disable_gps(self):
+        self.marionette.find_element(*self._gps_switch_locator).tap()
+        self.wait_for_condition(lambda m: not self.is_gps_enabled)
+
+    @property
+    def is_gps_enabled(self):
+        return self.marionette.find_element(*self._gps_enabled_locator).get_attribute('checked')
 
     @property
     def header_text(self):
@@ -59,6 +74,11 @@ class Settings(Base):
         from gaiatest.apps.settings.regions.language import Language
         self._tap_menu_item(self._language_menu_item_locator)
         return Language(self.marionette, self.app)
+
+    def open_do_not_track_settings(self):
+        from gaiatest.apps.settings.regions.do_not_track import DoNotTrack
+        self._tap_menu_item(self._do_not_track_menu_item_locator)
+        return DoNotTrack(self.marionette)
 
     def _tap_menu_item(self, menu_item_locator):
         self.wait_for_element_displayed(*menu_item_locator)
