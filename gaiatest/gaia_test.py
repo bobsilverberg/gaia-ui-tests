@@ -11,7 +11,6 @@ import traceback
 
 from marionette import MarionetteTestCase
 from marionette import Marionette
-from marionette import MarionetteTouchMixin
 import mozdevice
 
 
@@ -27,7 +26,10 @@ class GaiaData(object):
     @property
     def is_carrier_connected(self):
         card_state = self.marionette.execute_script("return GaiaDataLayer.cardState()")
-        return card_state == 'ready'
+        print 'card_state: %s' % card_state
+        voice_type = self.marionette.execute_script("return GaiaDataLayer.voiceType()")
+        print 'voice_type: %s' % voice_type
+        return voice_type != 'null'
 
 
 class GaiaDevice(object):
@@ -138,7 +140,6 @@ class GaiaTestCase(MarionetteTestCase):
 
     def setUp(self):
         MarionetteTestCase.setUp(self)
-        self.marionette.__class__ = type('Marionette', (Marionette, MarionetteTouchMixin), {})
 
         self.data_layer = GaiaData(self.marionette)
         self.device = GaiaDevice(self.marionette)
@@ -149,8 +150,6 @@ class GaiaTestCase(MarionetteTestCase):
                 self.device.manager.removeDir('/data/local/indexedDB')
                 self.device.manager.removeDir('/data/b2g/mozilla')
             self.device.start_b2g()
-
-        self.marionette.setup_touch()
 
         # the emulator can be really slow!
         self.marionette.set_script_timeout(self._script_timeout)

@@ -507,6 +507,11 @@ var GaiaDataLayer = {
   cardState: function() {
     var conn = window.navigator.mozMobileConnection;
     return conn.cardState;
+  },
+
+  voiceType: function() {
+    var voice = window.navigator.mozMobileConnection.voice;
+    return voice.type;
   }
 
 };
