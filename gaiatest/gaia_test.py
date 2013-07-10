@@ -27,6 +27,7 @@ class GaiaData(object):
     @property
     def is_carrier_connected(self):
         card_state = self.marionette.execute_script("return GaiaDataLayer.cardState()")
+        print 'card_state: %s' % card_state
         return card_state == 'ready'
 
 
