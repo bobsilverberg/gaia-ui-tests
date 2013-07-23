@@ -3,8 +3,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-import time
-
 from gaiatest.apps.base import Base
 from marionette.marionette import Actions
 
@@ -79,15 +77,17 @@ class Keyboard(Base):
 
     # trying to switch to right layout
     def _switch_to_correct_layout(self, val):
-        # alpha is in on keyboard
+        #input_type = self.marionette.execute_script('return window.wrappedJSObject.currentInputType;')
+        layout_page = self.marionette.execute_script('return window.wrappedJSObject.layoutPage;')
         if val.isalpha():
-            if self.is_element_present(*self._key_locator(self._alpha_key)):
+            is_upper_case = self.marionette.execute_script('return window.wrappedJSObject.isUpperCase;')
+            if not layout_page == 'Default':
                 self._tap(self._alpha_key)
-            if not self.is_element_present(*self._key_locator(val)):
+            if not val.isupper() == is_upper_case:
                 self._tap(self._upper_case_key)
         # numbers and symbols are in another keyboard
         else:
-            if self.is_element_present(*self._key_locator(self._numeric_sign_key)):
+            if layout_page == 'Default':
                 self._tap(self._numeric_sign_key)
             if not self.is_element_present(*self._key_locator(val)):
                 self._tap(self._alt_key)
@@ -106,11 +106,12 @@ class Keyboard(Base):
 
     # this is to tap on desired key on keyboard
     def _tap(self, val):
-        self.wait_for_element_displayed(*self._key_locator(val))
-        key = self.marionette.find_element(*self._key_locator(val))
-        key.tap()
-        # new el.tap() timing requires a bit of a wait after tapping on a key
-        time.sleep(0.5)
+        try:
+            key = self.marionette.find_element(*self._key_locator(val))
+            self.wait_for_condition(lambda m: key.is_displayed)
+            key.tap()
+        except:
+            raise Exception('Key %s not found on the keyboard' % val)
 
     # This is for selecting special characters after long pressing
     # "selection" is the nth special element you want to select (n>=1)
@@ -120,19 +121,18 @@ class Keyboard(Base):
 
         # after switching to correct keyboard, set long press if the key is there
         self._switch_to_correct_layout(long_press_key)
-        key = self._key_locator(long_press_key)
-        if self.is_element_present(*key):
-            keyobj = self.marionette.find_element(*key)
-            action.press(keyobj).wait(2).perform()
-        else:
-            assert False, 'Key %s not found on the keyboard' % long_press_key
+        try:
+            key = self.marionette.find_element(*self._key_locator(long_press_key))
+            self.wait_for_condition(lambda m: key.is_displayed)
+        except:
+            raise Exception('Key %s not found on the keyboard' % long_press_key)
+        action.press(key).wait(1).perform()
 
         # find the extended key and perform the action chain
         extend_keys = self.marionette.find_elements(*self._highlight_key_locator)
         if movement is True:
             action.move(extend_keys[selection - 1]).perform()
         action.release().perform()
-        time.sleep(1)
 
         self.marionette.switch_to_frame()
 
@@ -143,28 +143,6 @@ class Keyboard(Base):
         key_obj = self.marionette.find_element(*self._key_locator(self._upper_case_key))
         self.marionette.double_tap(key_obj)
         self.marionette.switch_to_frame()
-
-    # this is to detect if the element is present in a shorter time
-    # default timeout to 600 and allow people to set a higher timeout
-    def is_element_present(self, by, locator, timeout=600):
-        try:
-            self.marionette.set_search_timeout(timeout)
-            self.marionette.find_element(by, locator)
-            return True
-        except:
-            return False
-        finally:
-            # set the search timeout to the default value
-            self.marionette.set_search_timeout(10000)
-
-    # do a long press on a character
-    def long_press(self, key, timeout=2000):
-        if len(key) == 1:
-            self.switch_to_keyboard()
-            key_obj = self.marionette.find_element(*self._key_locator(key))
-            action = Actions(self.marionette)
-            action.press(key_obj).wait(timeout / 1000).release().perform()
-            self.marionette.switch_to_frame()
 
     # this would go through fastest way to tap/click through a string
     def send(self, string):
@@ -178,7 +156,7 @@ class Keyboard(Base):
                 # find the key to long press and press it to get the extended characters list
                 middle_key = self.marionette.find_element(*self._key_locator(middle_key_val))
                 action = Actions(self.marionette)
-                action.press(middle_key).wait(2).perform()
+                action.press(middle_key).wait(1).perform()
 
                 # find the targeted extended key to send
                 target_key = self.marionette.find_element(*self._key_locator(val))
@@ -186,10 +164,7 @@ class Keyboard(Base):
             else:
                 # after switching to correct keyboard, tap/click if the key is there
                 self._switch_to_correct_layout(val)
-                if self.is_element_present(*self._key_locator(val)):
-                    self._tap(val)
-                else:
-                    assert False, 'Key %s not found on the keyboard' % val
+                self._tap(val)
 
         self.marionette.switch_to_frame()
 
@@ -218,7 +193,7 @@ class Keyboard(Base):
         self.switch_to_keyboard()
         language_key = self.marionette.find_element(*self._language_key_locator)
         action = Actions(self.marionette)
-        action.press(language_key).wait(2).perform()
+        action.press(language_key).wait(1).perform()
         target_kb_layout = self.marionette.find_element(*keyboard_language_locator)
         action.move(target_kb_layout).release().perform()
         self.marionette.switch_to_frame()

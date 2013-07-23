@@ -97,11 +97,14 @@ class Base(object):
             raise TimeoutException(message)
 
     def is_element_present(self, by, locator):
+        self.marionette.set_search_timeout(0)
         try:
             self.marionette.find_element(by, locator)
             return True
         except NoSuchElementException:
             return False
+        finally:
+            self.marionette.set_search_timeout(10000)
 
     def is_element_displayed(self, by, locator):
         try:
